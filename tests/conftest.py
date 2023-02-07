@@ -1,5 +1,5 @@
 import pytest
-from lotterypool import create_app
+from backend import create_app
 
 
 @pytest.fixture
