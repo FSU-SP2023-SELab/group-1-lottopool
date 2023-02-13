@@ -44,3 +44,15 @@ See `requirements.txt`.
   - Pytest will look for any files in `tests/` that begin with `test_`, and then run functions in those files that also begin with that same prefix.
 - You can also run coverage tests with `coverage run -m pytest`
   - After running, generate a report using `coverage report`
+
+
+## Debug
+
+Multiple debug configurations have been setup for debugging in VSCode. These are useful when stepping through breakpoints in code and stopping on errors for easier debugging. The Chrome debug option is specifically setup to attach to VSCode's debugging process in order to have breakpoints hit in the VSCode editor itself. If no debug browser is used, breakpoints can be used inside a browser inspect panel instead.
+
+### Compound Debug Configurations
+
+- Launch Frontend + Backend
+  - This debug config will launch the Solid frontend and the Flask backend
+- Launch Frontend + Backend + Chrome Debug
+  - This will launch the above config, but with an additional Chrome debug browser instance launched
