@@ -23,8 +23,7 @@ dist/
 build/
 *.egg-info/
 
-# VS Code
-.vscode/
+# Mac
 .DS_Store
 
 # Logs
