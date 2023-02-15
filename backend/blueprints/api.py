@@ -11,4 +11,5 @@ api = Blueprint(
 def apihello():
 	#renders the api response 
 
-	return {"hello-world" : "from the api"}
+	return {"message" : "Hello from the API"}
+``
