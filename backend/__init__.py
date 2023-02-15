@@ -19,8 +19,9 @@ def create_app(test_config=None):
         app.config.update(**test_config)
 
     # Import blueprints
-    from .blueprints import index
+    from .blueprints import index, api
     app.register_blueprint(index)
+    app.register_blueprint(api)
 
     # Return app object
     return app
