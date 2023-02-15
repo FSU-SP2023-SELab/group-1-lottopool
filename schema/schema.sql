@@ -27,7 +27,7 @@ CREATE TABLE `lottopool`.`users`(
 
 CREATE TABLE `lottopool`.`agency`(
     `id` UUID NOT NULL,
-    `name` BIGINT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
     `address` VARCHAR(255) NOT NULL,
     `phone` VARCHAR(20) NOT NULL,
     PRIMARY KEY (`id`)
