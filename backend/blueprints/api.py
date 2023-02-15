@@ -12,4 +12,3 @@ def apihello():
 	#renders the api response 
 
 	return {"message" : "Hello from the API"}
-``
