@@ -3,8 +3,7 @@ from flask import Blueprint
 #create main api blueprint
 api = Blueprint(
 	"api",
-	__name__,
-	url_prefix="/api"
+	__name__
 )
 
 @api.route("/hello-world", methods=["GET",])

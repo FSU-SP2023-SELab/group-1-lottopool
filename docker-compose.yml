@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+
+  # Frontend NGINX
+  # - Only env vars needed are proxy info
+  frontend:
+    image: lp-frontend:dev
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      API_HOST: backend
+      API_PORT: 3001
+    ports:
+      - protocol: tcp
+        published: 3000
+        target: 80
+  
+  # Gunicorn API server
+  # - Most env vars are handled through Doppler
+  # - A few are overridden though, such as DB_URL
+  backend:
+    image: lp-backend:dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: mariadb
+      DB_USERNAME: ${MARIADB_USER}
+      DB_PASSWORD: ${MARIADB_PASSWORD}
+      DOPPLER_TOKEN: ${DOPPLER_TOKEN}
+
+  # Database
+  # - Local copy of database
+  # - No exposed ports, since internal only
+  mariadb:
+    image: mariadb
+    environment:
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - type: volume
+        source: mariadb-data
+        target: /var/lib/mysql
+  
+volumes:
+  mariadb-data:
