@@ -8,7 +8,7 @@ fi
 
 # Run gunicorn with doppler secret injection
 echo "Starting Gunicorn with Doppler..."
-doppler run -- gunicorn \
+doppler run --preserve-env -- gunicorn \
     --workers=4 \
     --bind=0.0.0.0:3001 \
     wsgi:app

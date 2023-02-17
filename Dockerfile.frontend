@@ -37,7 +37,6 @@ LABEL org.opencontainers.image.source="https://github.com/FSU-SP2023-SELab/group
 WORKDIR /usr/src
 
 # Copy in NGINX configuration & entrypoint
-COPY nginx-entrypoint.sh entrypoint.sh
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # Copy in compiled frontend from builder
