@@ -2,12 +2,13 @@ import { Component, Suspense, createResource, createSignal } from "solid-js";
 
 // function to call backend api
 const fetchMessage = async <T extends unknown>(): Promise<T> =>
-  (await fetch(`http://localhost:8000/api/hello-world`)).json();
+  (await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/hello-world`)).json();
 
 // component that holds a button to call the api and display its message
 const HelloWorldExample: Component = () => {
   const [showMessage, setShowMessage] = createSignal(false);
   const [message] = createResource<HelloMessage>(fetchMessage);
+  console.log(import.meta.env);
 
   return (
     <div class="text-center pt-16 bg-slate-100 h-screen">
