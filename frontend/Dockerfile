@@ -14,11 +14,11 @@ FROM node:19 AS builder
 WORKDIR /usr/src/app
 
 # Install Node requirements
-COPY frontend/package.json frontend/package-lock.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
 # Copy everything else over
-COPY frontend .
+COPY . .
 
 # Build
 RUN npm run build
@@ -37,7 +37,7 @@ LABEL org.opencontainers.image.source="https://github.com/FSU-SP2023-SELab/group
 WORKDIR /usr/src
 
 # Copy in NGINX configuration & entrypoint
-COPY nginx.conf /etc/nginx/templates/default.conf.template
+COPY default.conf.template /etc/nginx/templates/default.conf.template
 
 # Copy in compiled frontend from builder
 COPY --from=builder /usr/src/app/dist ./app

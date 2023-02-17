@@ -7,8 +7,8 @@ services:
   frontend:
     image: lp-frontend:dev
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: ./frontend
+      dockerfile: Dockerfile
     environment:
       API_HOST: backend
       API_PORT: 3001
@@ -23,8 +23,8 @@ services:
   backend:
     image: lp-backend:dev
     build:
-      context: .
-      dockerfile: Dockerfile.backend
+      context: ./backend
+      dockerfile: Dockerfile
     environment:
       DB_URL: mariadb
       DB_USERNAME: ${MARIADB_USER}

@@ -21,16 +21,14 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates cur
     apt-get -y install doppler
 
 # Install Python requirements
-COPY requirements.txt ./
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Gunicorn runtime
 RUN pip install gunicorn
 
-# Copy in app
-COPY ./backend ./backend
-COPY gunicorn-entrypoint.sh entrypoint.sh
-COPY wsgi.py .
+# Copy in the rest of the app
+COPY . .
 
 # Set default env vars
 ENV DOCKER_ENV=True

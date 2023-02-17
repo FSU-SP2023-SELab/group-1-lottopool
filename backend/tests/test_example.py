@@ -8,7 +8,7 @@ def test_index(client):
 
         # Get index
         res = client.get(
-            "/",
+            "/api/hello-world",
             follow_redirects=True
         )
 
