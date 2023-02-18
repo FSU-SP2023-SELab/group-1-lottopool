@@ -1,4 +1,4 @@
-import { Component, Suspense, createResource, createSignal } from "solid-js";
+import { Component, ErrorBoundary, Suspense, createResource, createSignal } from "solid-js";
 
 // function to call backend api
 const fetchMessage = async <T extends unknown>(): Promise<T> =>
@@ -8,12 +8,11 @@ const fetchMessage = async <T extends unknown>(): Promise<T> =>
 const HelloWorldExample: Component = () => {
   const [showMessage, setShowMessage] = createSignal(false);
   const [message] = createResource<HelloMessage>(fetchMessage);
-  console.log(import.meta.env);
 
   return (
     <div class="text-center pt-16 bg-slate-100 h-screen">
       <button
-        class="bg-black p-4 rounded-md text-white"
+        class="bg-black p-4 rounded-md text-white active:bg-gray-800"
         type="button"
         onClick={() => setShowMessage(true)}
       >
@@ -22,9 +21,11 @@ const HelloWorldExample: Component = () => {
 
       {showMessage() && (
         <div class="mt-8">
-          <Suspense fallback={<p>Loading...</p>}>
-            <pre>{message()?.message}</pre>
-          </Suspense>
+          <ErrorBoundary fallback={<p>Uh Oh! something went wrong :(</p>}>
+            <Suspense fallback={<p>Loading...</p>}>
+              <pre>{message()?.message}</pre>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       )}
     </div>

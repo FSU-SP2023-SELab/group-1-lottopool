@@ -1,6 +1,5 @@
 import os
 from flask import Flask
-from flask_cors import CORS
 
 
 from .middleware import PrefixMiddleware
@@ -15,7 +14,6 @@ def create_app(test_config=None):
 
     # Initialize application
     app = Flask(__name__)
-    CORS(app, supports_credentials=True)
 
     # Init WSGI server to serve everything prefixed w/ `/api`
     # It will return 404 errors for anything not in thie subdir
