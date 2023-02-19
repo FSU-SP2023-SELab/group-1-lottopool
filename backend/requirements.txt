@@ -17,5 +17,5 @@ pyflakes==3.0.1
 pytest==7.2.1
 python-dotenv==0.21.1
 tomli==2.0.1
-Werkzeug==2.2.2
+Werkzeug==2.2.3
 zipp==3.11.0
