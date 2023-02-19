@@ -34,7 +34,7 @@ frontend
 │   │       └── types.d.ts
 │   │
 │   ├── routes
-│   │   └── route-name.tsx
+│   │   └── route-page.tsx
 │   │
 │   ├── App.tsx
 │   ├── index.css
