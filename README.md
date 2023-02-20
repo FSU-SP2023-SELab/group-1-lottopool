@@ -35,6 +35,9 @@ Make sure your secrets and other env vars are also being loaded. You'll have to 
 - Change directories into `/frontend`
 - Install dependencies using `npm install`
 - Run using `npm start` (or `doppler run -- npm start`, if using Doppler)
+  - As an alternative, run `npm run dev` (or `doppler run -- npm run dev`, if using Doppler) to start the frontend without auto-opening the page in your browser
+
+[In-Depth Frontend Documentation](frontend/README.md)
 
 ## Testing
 

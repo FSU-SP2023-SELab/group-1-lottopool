@@ -11,7 +11,8 @@
 		"ms-azuretools.vscode-docker",
 		"dbaeumer.vscode-eslint",
 		"eamodio.gitlens",
-		"bradlc.vscode-tailwindcss"
+		"bradlc.vscode-tailwindcss",
+		"ms-python.autopep8"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": []
