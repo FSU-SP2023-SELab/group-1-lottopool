@@ -1,5 +1,7 @@
 {
     "editor.formatOnSave": true,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -11,12 +13,29 @@
     },
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2,
+        "editor.rulers": [
+            100
+        ],
     },
     "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2,
+        "editor.rulers": [
+            100
+        ],
     },
+    "python.linting.flake8Enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.flake8Args": [
+        "--extend-ignore=E203"
+    ],
+    "python.formatting.provider": "black",
     "[python]": {
-        "editor.defaultFormatter": "ms-python.python"
+        "editor.tabSize": 4,
+        "editor.rulers": [
+            88
+        ],
     },
     "[dockerfile]": {
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"

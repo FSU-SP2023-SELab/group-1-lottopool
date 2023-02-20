@@ -1,0 +1,78 @@
+# ================================= #
+# testing.yml                       #
+# lottopool's main testing workflow #
+# ================================= #
+
+# Name:
+name: Testing Suite
+
+# Description:
+#   This actions workflow was designed to run tests surrounding a Python 3.10
+#   dev environment. It uses Flake8 for linting, and pytest for testing. It
+#   will eventually be expanded to support frontend testing as well.
+
+#
+# ===== [ Triggers ] ==========================================================
+#
+
+# Reasoning:
+#   We want testing on all pull requests merging into a major upstream, to ensure
+#   code quality. Simultaneously, we also want to test each branch after merges
+#   to ensure conflicts don't cause issues. Therefore, we run tests on the source
+#   branch before merge (pull_request) and again on the commits after the merge
+#   (push) using the syntax below.
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+#
+# ===== [ Jobs ] ==============================================================
+#
+
+jobs:
+  # 1.) Backend Testing
+  py-testing:
+    name: Pytest
+    runs-on: ubuntu-latest
+    steps:
+      # 1.1.) Set up workspace
+      - name: Set up workspace
+        uses: actions/checkout@v3
+
+      # 1.2.) Install Python 3.10 & cache pip dependencies
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      # 1.3.) Install packages in requirements.txt
+      - name: Install packages
+        working-directory: backend
+        run: |
+          # install all requirements
+          pip3 install -r requirements.txt
+          # install local package in development mode, for testing
+          pip3 install -e .
+
+      # 1.4.) Lint with Flake8
+      - name: Lint with flake8
+        working-directory: backend
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings.
+          flake8 . --count --exit-zero --statistics
+
+      # 1.5.) Test with Pytest
+      - name: Test with Pytest
+        working-directory: backend
+        run: |
+          # run pytest within folder "tests" with increased verbosity
+          python3 -m pytest tests -v
