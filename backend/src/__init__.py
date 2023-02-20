@@ -16,7 +16,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     # Init CORS
-    if os.environ["FLASK_DEBUG"] == "1":
+    if os.environ.get("FLASK_DEBUG") == "1":
         print("Debug detected, Starting with CORS...")
         CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
 
