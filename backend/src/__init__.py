@@ -1,13 +1,13 @@
-import os
 from flask import Flask
 
 from .middleware import PrefixMiddleware
 
+
 def create_app(test_config=None):
     """
     WSGI app builder function
-    - We use this builder function to configure our application before it is 
-      exposed to any other modules. This ensures that regardless of whether 
+    - We use this builder function to configure our application before it is
+      exposed to any other modules. This ensures that regardless of whether
       flask or pytest is running it, the app is identical.
     """
 
@@ -26,6 +26,7 @@ def create_app(test_config=None):
 
     # Import blueprints
     from .blueprints import index, api
+
     app.register_blueprint(index)
     app.register_blueprint(api)
 

@@ -1,11 +1,11 @@
-from flask import Blueprint, request, session, render_template, redirect, \
-    url_for, flash
+from flask import Blueprint
 
 # Create main frontend blueprint
 index = Blueprint(
     "index",
     __name__,
 )
+
 
 # Index page
 @index.route("/", methods=["GET", "POST"])

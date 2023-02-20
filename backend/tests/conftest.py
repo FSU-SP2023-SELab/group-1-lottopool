@@ -4,7 +4,6 @@ from src import create_app
 
 @pytest.fixture
 def app():
-
     # create app using testing config
     app = create_app({"TESTING": True})
 
