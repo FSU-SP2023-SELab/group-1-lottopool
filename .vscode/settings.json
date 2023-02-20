@@ -1,5 +1,5 @@
 {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "files.exclude": {
@@ -30,8 +30,8 @@
     "python.linting.flake8Args": [
         "--extend-ignore=E203"
     ],
+    "python.formatting.provider": "black",
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.tabSize": 4,
         "editor.rulers": [
             88

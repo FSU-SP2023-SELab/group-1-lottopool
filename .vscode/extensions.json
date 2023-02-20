@@ -12,7 +12,6 @@
 		"dbaeumer.vscode-eslint",
 		"eamodio.gitlens",
 		"bradlc.vscode-tailwindcss",
-        "ms-python.black-formatter",
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": []
