@@ -21,6 +21,7 @@ RUN npm install
 COPY . .
 
 # Build
+ARG VITE_BACKEND_URL
 RUN npm run build
 
 #
