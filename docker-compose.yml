@@ -9,6 +9,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL}
     environment:
       API_HOST: backend
       API_PORT: 3001
@@ -16,7 +18,7 @@ services:
       - protocol: tcp
         published: 3000
         target: 80
-  
+
   # Gunicorn API server
   # - Most env vars are handled through Doppler
   # - A few are overridden though, such as DB_URL
@@ -44,6 +46,6 @@ services:
       - type: volume
         source: mariadb-data
         target: /var/lib/mysql
-  
+
 volumes:
   mariadb-data:
