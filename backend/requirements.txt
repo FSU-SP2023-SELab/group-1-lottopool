@@ -12,6 +12,7 @@ exceptiongroup==1.1.0
 flake8==6.0.0
 Flask==2.2.2
 Flask-Cors==3.0.10
+flask_talisman==1.0.0
 idna==3.4
 importlib-metadata==6.0.0
 iniconfig==2.0.0
