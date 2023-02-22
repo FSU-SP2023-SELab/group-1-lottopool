@@ -38,8 +38,8 @@ on:
 
 jobs:
   # 1.) Backend Testing
-  py-testing:
-    name: Pytest
+  backend-testing:
+    name: Backend Testing
     runs-on: ubuntu-latest
     steps:
       # 1.1.) Set up workspace
@@ -76,3 +76,54 @@ jobs:
         run: |
           # run pytest within folder "tests" with increased verbosity
           python3 -m pytest tests -v
+
+  # 2.) Backend Testing
+  frontend-testing:
+    name: Frontend Testing
+    runs-on: ubuntu-latest
+    steps:
+     # 2.1.) Set up workspace
+      - name: Set up workspace
+        uses: actions/checkout@v3
+
+      # 2.2.) Install Node 19
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+
+      # 2.3.) Install packages in requirements.txt
+      - name: Install packages
+        working-directory: frontend
+        run: |
+          # install all packages
+          npm i
+
+      # 2.4.) Check formatting with Prettier
+      - name: Check formatting with Prettier
+        working-directory: frontend
+        run: |
+          # stop the build if files need formatting
+          npm run format:check
+
+      # 2.5.) Lint with ESLint
+      - name: Lint with ESLint
+        working-directory: frontend
+        run: |
+          # stop the build if there are Typescript/Javascript syntax errors
+          npm run lint
+
+      # 2.6.) Build App
+      - name: Build App
+        working-directory: frontend
+        run: |
+          # ensure that frontend builds
+          npm run build
+
+      # 2.7.) Test with Solidjs Tests and Vitest
+      - name: Test with Solidjs Tests and Vitest
+        working-directory: frontend
+        run: |
+          # run tests
+          npm test
+

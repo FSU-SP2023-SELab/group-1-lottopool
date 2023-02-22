@@ -43,6 +43,19 @@ frontend
 └── index.html
 ```
 
+## `npm` Scripts
+
+- `npm start` - Start a Vite development server and open the webpage in your default browser
+- `npm run dev` - Start a Vite development server without auto-opening
+- `npm run build` - Build the frontend into a `dist/` folder
+- `npm run serve` - Test serve the frontend from the `dist/` folder
+- `npm run format:check` - Check if all files are formatted according to Prettier rules
+- `npm run format` - Format all files according to Prettier rules
+- `npm run lint` - Run ESLint on all files
+- `npm run compile` - Test compile all Typescript into Javascript
+- `npm test` - Run frontend tests
+- `npm run coverage` - Run coverage on frontend tests
+
 ## Additional Notes
 
 - Solidjs has [amazing tutorials](https://www.solidjs.com/tutorial/introduction_basics) on their website

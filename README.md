@@ -39,10 +39,11 @@ Make sure your secrets and other env vars are also being loaded. You'll have to 
 
 [In-Depth Frontend Documentation](frontend/README.md)
 
-## Testing
+## Backend Testing
 
-Testing is a work in progress. However, the Python backend is configured to use Pytest.
+The Python backend is configured to use [Pytest][Pytest].
 
+- `cd backend`
 - Install the `lotterypool` package in development mode using `pip3 install -e .`
   - This is the purpose of the `setup.py` file
   - `setup.cfg` is used later in our testing suite to specify vars for pytest and coverage.
@@ -51,6 +52,17 @@ Testing is a work in progress. However, the Python backend is configured to use 
   - Pytest will look for any files in `tests/` that begin with `test_`, and then run functions in those files that also begin with that same prefix.
 - You can also run coverage tests with `coverage run -m pytest`
   - After running, generate a report using `coverage report`
+
+## Frontend Testing
+
+Frontend testing is configured via [solidjs-testing-library][solidjs-testing-library] and [Vitest][Vitest].
+
+- `cd frontend`
+- Install dependencies with `npm install`
+- Run tests with `npm test`
+  - Vitest looks for any files ending in `*.test.tsx` and runs them
+- Additionally a coverage report is given with `npm run coverage`
+  - Results are displayed in the command line, as well as a simple website is created to view in the `coverage/` folder
 
 ## Deploying
 
@@ -76,3 +88,6 @@ Multiple debug configurations have been setup for debugging in VSCode. These are
   - This will launch the above config, but with an additional Chrome debug browser instance launched
 
 [doppler]: https://www.doppler.com/
+[solidjs-testing-library]: https://github.com/solidjs/solid-testing-library/
+[Vitest]: https://vitest.dev/
+[Pytest]: https://docs.pytest.org/en/7.2.x/
