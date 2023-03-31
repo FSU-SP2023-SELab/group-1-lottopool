@@ -6,6 +6,7 @@ const ProfilePage: Component = () => {
 
   return (
     <div>
+      <h1 class="text-3xl font-bold mb-8">Profile Page</h1>
       <Show when={auth?.user()} fallback={<p class="text-lg">No User Logged In</p>}>
         {Object.keys(auth?.user()).map((v) => (
           <p>

@@ -23,6 +23,7 @@ const HomePage: Component = () => {
 
   return (
     <div>
+      <h1 class="text-3xl font-bold mb-8">Home Page</h1>
       <Suspense fallback={<p>loading user...</p>}>
         <b>isAuthenticated</b>: {JSON.stringify(auth?.isAuthenticated())}
       </Suspense>
