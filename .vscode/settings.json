@@ -45,5 +45,6 @@
     },
     "[markdown]": {
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-    }
+    },
+    "python.analysis.typeCheckingMode": "basic"
 }

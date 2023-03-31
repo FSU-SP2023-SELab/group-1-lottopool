@@ -1,14 +1,20 @@
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Component, createResource, Resource, Suspense } from "solid-js";
 
-const fetchProtected = async (userToken: Resource<string | undefined>): Promise<MessageTest> =>
-  (
-    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/protected`, {
+const fetchProtected = async (userToken: Resource<string | undefined>): Promise<MessageTest> => {
+  try {
+    const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/protected`, {
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
-    })
-  ).json();
+    });
+    if (result.status == 200) return result.json();
+  } catch (e) {
+    console.log("ERROR", e);
+    return Promise.reject("You are not authorized");
+  }
+  return Promise.reject("An error has occured");
+};
 
 const HomePage: Component = () => {
   const auth = useAuth0();
@@ -17,17 +23,17 @@ const HomePage: Component = () => {
 
   return (
     <div>
-      <div class="">
-        <Suspense fallback={<p>no image</p>}>
-          <img src={(auth?.user() as any)?.picture}></img>
-        </Suspense>
-        <div>user: {JSON.stringify(auth?.user())}</div>
-        <div>user token: {JSON.stringify(userToken())}</div>
-        <div>isAuthenticated: {JSON.stringify(auth?.isAuthenticated())}</div>
-      </div>
-      <Suspense fallback={<p>Loading...</p>}>
-        <p>protected: {message()?.text}</p>
+      <Suspense fallback={<p>loading user...</p>}>
+        <b>isAuthenticated</b>: {JSON.stringify(auth?.isAuthenticated())}
       </Suspense>
+
+      {message.error ? (
+        <p>{JSON.stringify(message.error)}</p>
+      ) : (
+        <p>
+          <b>Protected Route</b>: {message.loading ? "Loading..." : message()?.text}
+        </p>
+      )}
     </div>
   );
 };
