@@ -4,7 +4,6 @@ from flask_cors import CORS
 from .middleware import PrefixMiddleware
 from flask_talisman import Talisman
 from src.blueprints.security.auth0_service import auth0_service
-from utils import safe_get_env_var
 
 
 def create_app(test_config=None):
@@ -16,8 +15,8 @@ def create_app(test_config=None):
     """
 
     # Environment Variables
-    auth0_audience = safe_get_env_var("AUTH0_AUDIENCE")
-    auth0_domain = safe_get_env_var("AUTH0_DOMAIN")
+    auth0_audience = os.getenv("AUTH0_AUDIENCE")
+    auth0_domain = os.getenv("AUTH0_DOMAIN")
 
     # Initialize application
     app = Flask(__name__)
@@ -54,7 +53,7 @@ def create_app(test_config=None):
         return response
 
     # Init CORS
-    if os.environ.get("FLASK_DEBUG") == "1":
+    if os.getenv("FLASK_DEBUG") == "1":
         print("Debug detected, Starting with CORS...")
         CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
 
