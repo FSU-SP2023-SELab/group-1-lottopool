@@ -16,7 +16,7 @@ if not (DB_HOST and DB_PASS and DB_USER):
     raise Exception("ERROR: Database isn't configured properly!")
 
 
-def new_db_conn(db: Optional[str] = DB_NAME):
+def init_db_conn(active_db: Optional[str] = DB_NAME):
     """
     Returns new cursor connected to MySQL database
     - Should be stored in global context scope (i.e. flask.g) so
@@ -24,8 +24,16 @@ def new_db_conn(db: Optional[str] = DB_NAME):
     - If calling manually, use w/ a 'with' statement
     """
 
-    # Return connection to DB
-    return connector.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=db)
+    # Define kwargs
+    db_config = {
+        "host": DB_HOST,
+        "user": DB_USER,
+        "password": DB_PASS,
+        "database": active_db,
+    }
+
+    # Return connector
+    return connector.connect(**db_config)
 
 
 def db_check_first_run():
@@ -34,7 +42,7 @@ def db_check_first_run():
     """
 
     # Get cursor with server context, so we can query tables
-    with new_db_conn(db=None) as db:
+    with init_db_conn(active_db=None) as db:
         cur = db.cursor()
 
         # Check to see if our database exists
