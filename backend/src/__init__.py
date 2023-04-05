@@ -1,6 +1,8 @@
 import os
 from flask import Flask
 from flask_cors import CORS
+
+from .db import db_check_first_run
 from .middleware import PrefixMiddleware
 
 
@@ -14,6 +16,9 @@ def create_app(test_config=None):
 
     # Initialize application
     app = Flask(__name__)
+
+    # Initialize database
+    db_check_first_run()
 
     # Init CORS
     if os.environ.get("FLASK_DEBUG") == "1":
