@@ -36,6 +36,14 @@ class Users:
 
     @classmethod
     def find_by_uuid(self, id: str):
+        """
+        Searches the database for a User by ID
+
+        :param str id: The UUID to search for
+
+        :returns: The corresponding User object
+        :rtype: :class:`models.Users`
+        """
         cur = g.db.cursor(dictionary=True)
         cur.execute(f"SELECT * FROM users WHERE id='{id}'")
         data = cur.fetchone()
