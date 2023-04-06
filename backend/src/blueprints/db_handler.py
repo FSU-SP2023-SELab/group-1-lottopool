@@ -55,4 +55,10 @@ def users():
 
     u = Users.find_by_uuid("1091751e-d4a4-11ed-9ffa-0242ac140002")
     print(u)
+    u2 = Users()
+    u2.id = "1234561e-d4a4-11ed-9ffa-0242ac140002"
+    u2.auth0_id = "real-auth0-id"
+    u2.save()
+
+    print(u2)
     return vars(u)
