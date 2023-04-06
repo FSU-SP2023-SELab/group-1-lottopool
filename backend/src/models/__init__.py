@@ -2,3 +2,4 @@
 """All models used to represent database entries"""
 
 from .agency import Agency
+from .users import Users
