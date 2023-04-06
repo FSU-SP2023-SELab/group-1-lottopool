@@ -20,13 +20,13 @@ DROP TABLE IF EXISTS `lottopool`.`agency`;
 /* Make tables */
 
 CREATE TABLE `lottopool`.`users`(
-    `id` UUID NOT NULL,
+    `id` UUID UNIQUE NOT NULL,
     `auth0_id` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `lottopool`.`agency`(
-    `id` UUID NOT NULL,
+    `id` UUID UNIQUE NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `address` VARCHAR(255) NOT NULL,
     `phone` VARCHAR(20) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `lottopool`.`agency`(
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `lottopool`.`pools`(
-    `id` UUID NOT NULL,
+    `id` UUID UNIQUE NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `start` DATETIME NOT NULL,
     `end` DATETIME NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE `lottopool`.`pools`(
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `lottopool`.`tickets`(
-    `id` UUID NOT NULL,
+    `id` UUID UNIQUE NOT NULL,
     `pool_id` UUID NOT NULL,
     `user_id` UUID NOT NULL,
     `value` DOUBLE NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `lottopool`.`tickets`(
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `lottopool`.`paid_in`(
-    `id` UUID NOT NULL,
+    `id` UUID UNIQUE NOT NULL,
     `amount` DOUBLE NOT NULL,
     `pool_id` UUID NOT NULL,
     `agency_id` UUID NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `lottopool`.`paid_in`(
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 CREATE TABLE `lottopool`.`paid_out`(
-    `id` UUID NOT NULL,
+    `id` UUID UNIQUE NOT NULL,
     `user_id` UUID NOT NULL,
     `pool_id` UUID NOT NULL,
     `amount` DOUBLE NOT NULL,

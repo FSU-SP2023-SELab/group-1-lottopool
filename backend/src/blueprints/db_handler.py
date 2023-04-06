@@ -24,6 +24,7 @@ def remove_db_from_scope(res):
 
     # If still open, close
     if g.db:
+        g.db.commit()
         g.db.close()
 
     # Return response
@@ -34,6 +35,14 @@ def remove_db_from_scope(res):
 def huh():
     """NOTE: This is a temp tester function that should be removed!"""
 
-    a = Agency.find_by_uuid("a6545b27-d403-11ed-9ffa-0242ac140002")
+    a = Agency.find_by_uuid("b8197906-d49f-11ed-9ffa-0242ac140002")
     print(a)
-    return vars(a)
+
+    b = Agency()
+    b.name = "save function tester"
+    b.address = "100 test st."
+    b.phone = "1-800-555-test"
+    print(b)
+    b.save()
+
+    return {"a": vars(a), "b": vars(b)}
