@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 
 from ..db import init_db_conn
-from ..models import Agency, Users
+from ..models import Agency, Tickets
 
 # Create main db blueprint
 # - This Blueprint is mainly used to register before and after
@@ -49,16 +49,11 @@ def huh():
     return {"a": vars(a), "b": vars(b)}
 
 
-@db_handler.get("/users")
-def users():
+@db_handler.get("/tickets")
+def tickets():
     """NOTE: This is a temp tester function that should be removed!"""
 
-    u = Users.find_by_uuid("1091751e-d4a4-11ed-9ffa-0242ac140002")
-    print(u)
-    u2 = Users()
-    u2.id = "1234561e-d4a4-11ed-9ffa-0242ac140002"
-    u2.auth0_id = "real-auth0-id"
-    u2.save()
+    t = Tickets.find_by_uuid("9d9a7492-b125-4f38-8af4-cb0678a9c4d5")
+    print(t)
 
-    print(u2)
-    return vars(u)
+    return vars(t)
