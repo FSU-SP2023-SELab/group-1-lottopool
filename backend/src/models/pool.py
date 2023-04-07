@@ -3,6 +3,8 @@ import uuid
 from flask import g
 from datetime import datetime
 
+from .agency import Agency
+
 
 class Pool:
     """
@@ -56,15 +58,18 @@ class Pool:
         cur = g.db.cursor()
         cur.execute(
             """
-            REPLACE INTO pools 
+            REPLACE INTO pools
                 (id, name, agency_id, start, end, jackpot, ppt, won)
             VALUES (
                 %(id)s, %(name)s, %(agency_id)s, %(start)s, %(end)s,
-                %(jackpot)s, %(pps)s, %(won)s
+                %(jackpot)s, %(ppt)s, %(won)s
             )
             """,
             self.__dict__,
         )
+
+    def set_agency(self, agency: Agency):
+        self.agency_id = agency.id
 
     @classmethod
     def find_by_uuid(self, id: str):

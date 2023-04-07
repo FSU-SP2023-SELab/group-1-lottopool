@@ -2,6 +2,8 @@ import uuid
 
 from flask import g
 
+from .pool import Pool
+
 
 class Payout:
     """
@@ -44,6 +46,12 @@ class Payout:
             """,
             self.__dict__,
         )
+
+    def set_user(self, user_id: str):
+        self.user_id = user_id
+
+    def set_pool(self, pool: Pool):
+        self.pool_id = pool.id
 
     @classmethod
     def find_by_uuid(self, id: str):

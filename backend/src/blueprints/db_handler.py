@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 
 from ..db import init_db_conn
-from ..models import Agency, Ticket
+from ..models import Pool, Income, Payout, Agency, Ticket
 
 # Create main db blueprint
 # - This Blueprint is mainly used to register before and after
@@ -36,14 +36,58 @@ def remove_db_from_scope(res):
 def huh():
     """NOTE: This is a temp tester function that should be removed!"""
 
-    b = Agency()
-    b.name = "save function tester"
-    b.address = "100 test st."
-    b.phone = "1-800-555-test"
-    print(b)
-    b.save()
+    # fake a user
+    u = "abcdefg1234"
 
-    return {"b": vars(b)}
+    # make an agency
+    a = Agency()
+    a.name = "save function tester"
+    a.address = "100 test st."
+    a.phone = "1-800-555-test"
+    print("Agency:", a)
+    a.save()
+
+    # make a pool
+    p = Pool()
+    p.name = "Powerball for April 20th"
+    p.set_agency(a)
+    p.jackpot = 1000000.00
+    print("Pool:", p)
+    p.save()
+
+    # make a ticket for the pool
+    t = Ticket()
+    t.set_user(u)
+    t.set_pool(p)
+    t.value = 3.00
+    print("Ticket:", t)
+    t.save()
+
+    # report some income
+    i = Income()
+    i.set_agency(a)
+    i.set_pool(p)
+    i.amount = 700000.00
+    print("Income:", i)
+    i.save()
+
+    # report a payout
+    o = Payout()
+    o.set_pool(p)
+    o.set_user(u)
+    o.amount = 695000.00
+    print("Payout:", o)
+    o.save()
+
+    # return EVERYTHING
+    return {
+        "user_id": u,
+        "agency": vars(a),
+        "pool": vars(p),
+        "ticket": vars(t),
+        "income": vars(i),
+        "payout": vars(o),
+    }
 
 
 @db_handler.get("/tickets")

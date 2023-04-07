@@ -63,7 +63,7 @@ class Ticket:
         self.user_id = user_id
 
     def set_pool(self, pool: Pool):
-        self.pool_id = Pool.id
+        self.pool_id = pool.id
 
     @classmethod
     def find_by_uuid(self, id: str):

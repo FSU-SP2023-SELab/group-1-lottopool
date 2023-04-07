@@ -2,6 +2,9 @@ import uuid
 
 from flask import g
 
+from .pool import Pool
+from .agency import Agency
+
 
 class Income:
     """
@@ -44,6 +47,12 @@ class Income:
             """,
             self.__dict__,
         )
+
+    def set_pool(self, pool: Pool):
+        self.pool_id = pool.id
+
+    def set_agency(self, agency: Agency):
+        self.agency_id = agency.id
 
     @classmethod
     def find_by_uuid(self, id: str):
