@@ -20,9 +20,9 @@ class Agency:
     def __init__(
         self,
         id: str = None,
-        name: str = "",
-        address: str = "",
-        phone: str = "",
+        name: str = None,
+        address: str = None,
+        phone: str = None,
     ):
         self.id = id if id else str(uuid.uuid4())
         self.name = name

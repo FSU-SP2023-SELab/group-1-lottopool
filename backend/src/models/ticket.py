@@ -1,10 +1,14 @@
 import uuid
+
 from flask import g
-from models import Users
+
+from .pool import Pool
 
 
-class Tickets:
-    """The model used to represent tickets
+class Ticket:
+    """
+    The model used to represent tickets
+
     :param id: The ticket's unique ID
     :type id: str, optional
     :param pool_id: The ticket's pool's ID
@@ -25,13 +29,13 @@ class Tickets:
         id: str = None,
         pool_id: str = None,
         user_id: str = None,
-        value: float = 0.0,
-        picture_url: str = "",
-        acquired: int = 0,
+        value: float = None,
+        picture_url: str = None,
+        acquired: int = None,
     ):
         self.id = id if id else str(uuid.uuid4())
-        self.pool_id = pool_id = pool_id if pool_id else str(uuid.uuid4())
-        self.user_id = user_id = user_id if user_id else str(uuid.uuid4())
+        self.pool_id = pool_id
+        self.user_id = user_id
         self.value = value
         self.picture_url = picture_url
         self.acquired = acquired
@@ -47,14 +51,19 @@ class Tickets:
         cur.execute(
             """
             REPLACE INTO tickets (id, pool_id, user_id, value, picture_url, acquired)
-            VALUES (%(id)s, %(pool_id)s, %(user_id)s, %(value)s, %(picture_url)s, 
-                        %(acquired)s)
+            VALUES (
+                %(id)s, %(pool_id)s, %(user_id)s, %(value)s, %(picture_url)s,
+                %(acquired)s
+            )
             """,
             self.__dict__,
         )
 
-    def setUser(self, user_id: Users):
-        self.user_id = Users.id
+    def set_user(self, user_id: str):
+        self.user_id = user_id
+
+    def set_pool(self, pool: Pool):
+        self.pool_id = Pool.id
 
     @classmethod
     def find_by_uuid(self, id: str):
@@ -69,4 +78,4 @@ class Tickets:
         cur = g.db.cursor(dictionary=True)
         cur.execute(f"SELECT * FROM tickets WHERE id='{id}'")
         data = cur.fetchone()
-        return Tickets(**data)
+        return Ticket(**data)

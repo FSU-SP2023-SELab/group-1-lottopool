@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 
 from ..db import init_db_conn
-from ..models import Agency, Tickets
+from ..models import Agency, Ticket
 
 # Create main db blueprint
 # - This Blueprint is mainly used to register before and after
@@ -36,9 +36,6 @@ def remove_db_from_scope(res):
 def huh():
     """NOTE: This is a temp tester function that should be removed!"""
 
-    a = Agency.find_by_uuid("b8197906-d49f-11ed-9ffa-0242ac140002")
-    print(a)
-
     b = Agency()
     b.name = "save function tester"
     b.address = "100 test st."
@@ -46,14 +43,14 @@ def huh():
     print(b)
     b.save()
 
-    return {"a": vars(a), "b": vars(b)}
+    return {"b": vars(b)}
 
 
 @db_handler.get("/tickets")
 def tickets():
     """NOTE: This is a temp tester function that should be removed!"""
 
-    t = Tickets.find_by_uuid("9d9a7492-b125-4f38-8af4-cb0678a9c4d5")
+    t = Ticket.find_by_uuid("9d9a7492-b125-4f38-8af4-cb0678a9c4d5")
     print(t)
 
     return vars(t)

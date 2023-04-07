@@ -12,9 +12,6 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASSWORD")
 DB_NAME = "lottopool"
 
-if not (DB_HOST and DB_PASS and DB_USER):
-    raise Exception("ERROR: Database isn't configured properly!")
-
 
 def init_db_conn(active_db: Optional[str] = DB_NAME):
     """
@@ -40,6 +37,10 @@ def db_check_first_run():
     """
     Initializes new database, if needed
     """
+
+    # Check to make sure env vars are set
+    if not (DB_HOST and DB_PASS and DB_USER):
+        raise Exception("ERROR: Database isn't configured properly!")
 
     # Get cursor with server context, so we can query tables
     with init_db_conn(active_db=None) as db:
