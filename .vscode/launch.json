@@ -38,13 +38,13 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "backend",
-                "FLASK_Launch": "1"
-            },
+                "DOPPLER_ENV": "1" // Enable doppler-env to inject env vars
+              },
             "args": [
                 "run",
             ],
-            "justMyCode": true
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/backend",
         },
     ],
     "compounds": [
