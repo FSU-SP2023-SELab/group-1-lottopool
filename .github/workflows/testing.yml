@@ -46,7 +46,8 @@ jobs:
     services:
       mariadb:
         image: mariadb:latest
-        ports: [3306]
+        ports:
+          - 3306:3306
         env:
           MARIADB_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
@@ -85,6 +86,12 @@ jobs:
         run: |
           # run pytest within folder "tests" with increased verbosity
           python3 -m pytest tests -v
+        env:
+          DB_USER: "root"
+          DB_HOST: "localhost"
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
 
   # 2.) Frontend Testing
   frontend-testing:
