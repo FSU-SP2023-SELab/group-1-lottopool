@@ -1,7 +1,7 @@
 from flask import Blueprint
 from src.blueprints.messages.message import Message
 from src.blueprints.security.guards import (
-    authorization_guard,
+    protected_or_admin_guard,
 )
 
 bp_url_prefix = "/messages"
@@ -13,13 +13,20 @@ def public():
     return vars(Message("No access required."))
 
 
-@messages.route("/protected")
-@authorization_guard
-def protected():
-    return vars(Message("The API successfully validated your access token."))
-
-
-@messages.route("/admin")
-@authorization_guard
-def admin():
-    return vars(Message("The API successfully recognized you as an admin."))
+@messages.route("/protected_or_admin")
+@protected_or_admin_guard
+def protected_or_admin(admin=False):
+    if admin:
+        return vars(
+            Message(
+                "The API successfully \
+            recognized you as an admin."
+            )
+        )
+    else:
+        return vars(
+            Message(
+                "The API successfully \
+            validated your access token."
+            )
+        )

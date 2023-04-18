@@ -1,3 +1,3 @@
 interface MessageTest {
-  text: string;
+  message: string;
 }

@@ -1,8 +1,12 @@
-from http import HTTPStatus
-
 import jwt
+import os
 
-from src.utils import json_abort
+from src.blueprints.messages.error_messages import (
+    signing_key_unavailable_message,
+    invalid_token_message,
+    jwks_uri_not_initialized_message,
+    signing_key_not_found_message,
+)
 
 
 class Auth0Service:
@@ -11,7 +15,7 @@ class Auth0Service:
     def __init__(self):
         self.issuer_url = None
         self.audience = None
-        self.algorithm = "RS256"
+        self.algorithm = ["RS256"]
         self.jwks_uri = None
 
     def initialize(self, auth0_domain, auth0_audience):
@@ -20,41 +24,38 @@ class Auth0Service:
         self.audience = auth0_audience
 
     def get_signing_key(self, token):
+        if not self.jwks_uri:
+            return jwks_uri_not_initialized_message()
+
         try:
             jwks_client = jwt.PyJWKClient(self.jwks_uri)
-
             return jwks_client.get_signing_key_from_jwt(token).key
         except Exception as error:
-            json_abort(
-                HTTPStatus.INTERNAL_SERVER_ERROR,
-                {
-                    "error": "signing_key_unavailable",
-                    "error_description": error.__str__(),
-                    "message": "Unable to verify credentials",
-                },
-            )
+            return signing_key_unavailable_message(error)
+
+    def has_admin_role(self, payload):
+        if not payload:
+            return False
+
+        namespace = os.getenv("AUTH0_DOMAIN")
+        roles = payload.get(f"{namespace}roles", [])
+        return "Admin" in roles
 
     def validate_jwt(self, token):
         try:
             jwt_signing_key = self.get_signing_key(token)
+            if not jwt_signing_key:
+                return signing_key_not_found_message()
 
             payload = jwt.decode(
                 token,
-                jwt_signing_key,
+                jwt_signing_key,  # type: ignore
                 algorithms=self.algorithm,
                 audience=self.audience,
                 issuer=self.issuer_url,
             )
         except Exception as error:
-            json_abort(
-                HTTPStatus.UNAUTHORIZED,
-                {
-                    "error": "invalid_token",
-                    "error_description": error.__str__(),
-                    "message": "Bad credentials.",
-                },
-            )
-            return
+            return invalid_token_message(error)
 
         return payload
 

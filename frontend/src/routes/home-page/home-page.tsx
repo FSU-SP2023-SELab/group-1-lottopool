@@ -3,11 +3,14 @@ import { Component, createResource, Resource, Suspense } from "solid-js";
 
 const fetchProtected = async (userToken: Resource<string | undefined>): Promise<MessageTest> => {
   try {
-    const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/protected`, {
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-      },
-    });
+    const result = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/messages/protected_or_admin`,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
     if (result.status == 200) return result.json();
   } catch (e) {
     console.log("ERROR", e);
@@ -32,7 +35,7 @@ const HomePage: Component = () => {
         <p>{JSON.stringify(message.error)}</p>
       ) : (
         <p>
-          <b>Protected Route</b>: {message.loading ? "Loading..." : message()?.text}
+          <b>Protected Route</b>: {message.loading ? "Loading..." : message()?.message}
         </p>
       )}
     </div>
