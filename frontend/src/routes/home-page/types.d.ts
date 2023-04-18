@@ -1,0 +1,3 @@
+interface MessageTest {
+  message: string;
+}

@@ -1,13 +1,16 @@
 import { Component } from "solid-js";
 import { Routes, Route } from "@solidjs/router";
 import HomePage from "./routes/home-page";
+import Navbar from "./components/navbar";
+import ProfilePage from "./routes/profile-page/profile-page";
 
 const App: Component = () => {
   return (
-    <div class="text-center pt-16 bg-slate-100 h-screen">
-      <h1 class="text-6xl mb-8 font-bold">Lottopool</h1>
+    <div class="bg-slate-100 h-screen p-8">
+      <Navbar />
       <Routes>
         <Route path={"/"} component={HomePage} />
+        <Route path={"/profile"} component={ProfilePage} />
       </Routes>
     </div>
   );
