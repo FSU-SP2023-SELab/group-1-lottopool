@@ -41,6 +41,15 @@ jobs:
   backend-testing:
     name: Backend Testing
     runs-on: ubuntu-latest
+
+    # 1.0) Start MariaDB
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports: [3306]
+        env:
+          MARIADB_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
     steps:
       # 1.1.) Set up workspace
       - name: Set up workspace
@@ -77,12 +86,12 @@ jobs:
           # run pytest within folder "tests" with increased verbosity
           python3 -m pytest tests -v
 
-  # 2.) Backend Testing
+  # 2.) Frontend Testing
   frontend-testing:
     name: Frontend Testing
     runs-on: ubuntu-latest
     steps:
-     # 2.1.) Set up workspace
+      # 2.1.) Set up workspace
       - name: Set up workspace
         uses: actions/checkout@v3
 
@@ -126,4 +135,3 @@ jobs:
         run: |
           # run tests
           npm test
-
