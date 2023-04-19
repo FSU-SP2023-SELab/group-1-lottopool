@@ -1,6 +1,8 @@
 import os
 from flask import Flask
 from flask_cors import CORS
+
+from .db import db_check_first_run
 from .middleware import PrefixMiddleware
 from flask_talisman import Talisman
 from src.blueprints.security.auth0_service import auth0_service
@@ -21,10 +23,14 @@ def create_app(test_config=None):
     # Initialize application
     app = Flask(__name__)
 
-    # HTTP Security Headers
+    # Initialize database
+    db_check_first_run()
+    
+    # Initialize Auth0
+    auth0_service.initialize(auth0_domain, auth0_audience)
 
+    # CORS Initialization
     csp = {"default-src": ["'self'"], "frame-ancestors": ["'none'"]}
-
     Talisman(
         app,
         force_https=False,
@@ -34,9 +40,8 @@ def create_app(test_config=None):
         x_xss_protection=False,
         x_content_type_options=True,
     )
-
-    auth0_service.initialize(auth0_domain, auth0_audience)
-
+    
+    # Security Header Middleware
     @app.after_request
     def add_headers(response):
         response.headers["X-XSS-Protection"] = "0"
@@ -52,7 +57,8 @@ def create_app(test_config=None):
         ] = "max-age=31536000; includeSubDomains"
         return response
 
-    # Init CORS
+    # More Init CORS
+    # TODO: merge with talisman?
     if os.getenv("FLASK_DEBUG") == "1":
         print("Debug detected, Starting with CORS...")
         CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
@@ -68,10 +74,10 @@ def create_app(test_config=None):
         app.config.update(**test_config)
 
     # Import blueprints
-    from .blueprints import index, api, messages
-
+    from .blueprints import index, api, db_handler, messages
     app.register_blueprint(index)
     app.register_blueprint(api)
+    app.register_blueprint(db_handler)
     app.register_blueprint(messages)
 
     # Return app object
