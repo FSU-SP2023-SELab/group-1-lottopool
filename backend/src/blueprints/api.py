@@ -71,3 +71,30 @@ def dashboard(**kwargs):
 
     # Return message
     return m.to_dict()
+
+
+@api.route("/pools", methods=["GET"])
+@protected_or_admin_guard
+def get_current_pools(**kwargs):
+    """
+    Gets all current pools
+    """
+
+    # Get current pools
+    pools = Pool.get_current_pools()
+
+    # Modify the dicts before we ship it
+    pool_data_list = []
+    if pools:
+        for pool in pools:
+            pool_data = pool.to_dict()
+            pool_data["tix_count"] = pool.get_ticket_count()
+            pool_data["user_count"] = pool.get_ticket_count(unique=True)
+            pool_data_list.append(pool_data)
+
+    # Format Message
+    m = Message("success")
+    m["pools"] = pool_data_list
+
+    # Return message
+    return m.to_dict()
