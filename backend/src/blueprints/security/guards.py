@@ -55,6 +55,7 @@ def protected_or_admin_guard(f):
             return json_abort(403, {"message": "Permission denied"})
 
         g.access_token = validated_token
+        g.user_id = g.access_token["sub"]
 
         # Check if the user is an admin or protected
         if auth0_service.has_admin_role(validated_token):

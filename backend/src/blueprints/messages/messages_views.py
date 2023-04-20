@@ -17,16 +17,6 @@ def public():
 @protected_or_admin_guard
 def protected_or_admin(admin=False):
     if admin:
-        return vars(
-            Message(
-                "The API successfully \
-            recognized you as an admin."
-            )
-        )
+        return vars(Message("The API successfully recognized you as an admin."))
     else:
-        return vars(
-            Message(
-                "The API successfully \
-            validated your access token."
-            )
-        )
+        return vars(Message("The API successfully validated your access token."))

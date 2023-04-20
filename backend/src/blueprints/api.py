@@ -1,7 +1,8 @@
-from flask import Blueprint
+from flask import Blueprint, g
 
 from .messages import Message, ErrorMessage
-from ..models import Pool, Ticket
+from .security.guards import protected_or_admin_guard
+from ..models import Pool, Ticket, UserBalance
 
 # create main api blueprint
 api = Blueprint("api", __name__)
@@ -41,6 +42,32 @@ def landing_page():
     m["pool"] = lp.to_dict()
     m["tix_count"] = tix_count
     m["user_count"] = user_count
+
+    # Return message
+    return m.to_dict()
+
+
+@api.route("/dashboard", methods=["GET"])
+@protected_or_admin_guard
+def dashboard(**kwargs):
+    """
+    Returns total earnings and tickets held
+    """
+
+    # Get Current Balance
+    bal = UserBalance.get_user_balance(g.user_id)
+
+    # Get current tickets
+    tickets = []
+    pools = Pool.get_current_pools()
+    if pools:
+        for pool in pools:
+            tickets += Ticket.find_by_pool(pool, g.user_id)
+
+    # Format Message
+    m = Message("success")
+    m["balance"] = bal.amount
+    m["cur_tickets"] = [t.to_dict() for t in tickets]
 
     # Return message
     return m.to_dict()

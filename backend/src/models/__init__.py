@@ -6,3 +6,4 @@ from .income import Income
 from .payout import Payout
 from .agency import Agency
 from .ticket import Ticket
+from .balance import UserBalance

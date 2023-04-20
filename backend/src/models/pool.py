@@ -76,7 +76,7 @@ class Pool:
 
     def get_ticket_count(self, unique: bool = False):
         """
-        :param bool unique: Return count of unique individuals or tickets
+        :param bool unique: Return count of unique individuals or total tickets
 
         :returns: Gets count of tickets in pool
         :rtype: int
@@ -125,7 +125,26 @@ class Pool:
         cur.execute("SELECT * FROM pools ORDER BY start DESC LIMIT 1")
         data = cur.fetchone()
 
-        # If no row, None. Else, Agency
+        # If no row, None. Else, Pool
         if not data:
             return None
         return Pool(**data)
+
+    @classmethod
+    def get_current_pools(cls):
+        """
+        Searches the database for all current pools
+
+        :returns: The corresponding Pool object
+        :rtype: :class:`models.Pool`
+        """
+
+        # Execute query
+        cur = g.db.cursor(dictionary=True)
+        cur.execute("SELECT * FROM pools WHERE end > CURDATE()")
+        data = cur.fetchall()
+
+        # If no row, None. Else, list of Pools
+        if len(data) == 0:
+            return None
+        return [Pool(**d) for d in data]

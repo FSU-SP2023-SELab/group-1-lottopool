@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS `lottopool`.`tickets`;
 DROP TABLE IF EXISTS `lottopool`.`paid_in`;
 DROP TABLE IF EXISTS `lottopool`.`paid_out`;
 DROP TABLE IF EXISTS `lottopool`.`agency`;
+DROP TABLE IF EXISTS `lottopool`.`balances`;
 
 /* Also drop legacy tables */
 
@@ -47,9 +48,9 @@ CREATE TABLE `lottopool`.`tickets`(
     `id` UUID UNIQUE NOT NULL,
     `pool_id` UUID,
     `user_id` VARCHAR(100),
-    `value` DOUBLE,
     `picture_url` VARCHAR(255),
     `acquired` TINYINT,
+    `paid_out` TINYINT,
     FOREIGN KEY(`pool_id`) REFERENCES `pools`(`id`),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -71,6 +72,12 @@ CREATE TABLE `lottopool`.`payouts`(
     `amount` DOUBLE,
     FOREIGN KEY(`pool_id`) REFERENCES `pools`(`id`),
     PRIMARY KEY (`id`)
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+
+CREATE TABLE `lottopool`.`balances`(
+    `user_id` VARCHAR(100) UNIQUE NOT NULL,
+    `amount` DOUBLE,
+    PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /* Make views */
