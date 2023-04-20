@@ -8,18 +8,6 @@ from ..models import Pool, Ticket, UserBalance
 api = Blueprint("api", __name__)
 
 
-@api.route(
-    "/hello-world",
-    methods=[
-        "GET",
-    ],
-)
-def apihello():
-    # renders the api response
-
-    return {"message": "Hello from the API"}
-
-
 @api.route("/landing", methods=["GET"])
 def landing_page():
     """
