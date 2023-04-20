@@ -43,6 +43,9 @@ class Ticket:
     def __repr__(self) -> str:
         return f'Ticket(id="{self.id}")'
 
+    def to_dict(self):
+        return self.__dict__
+
     def save(self):
         """Commits current changes to database"""
 
@@ -66,7 +69,7 @@ class Ticket:
         self.pool_id = pool.id
 
     @classmethod
-    def find_by_uuid(self, id: str):
+    def find_by_uuid(cls, id: str):
         """
         Searches the database for a Ticket by ID
 
@@ -79,3 +82,19 @@ class Ticket:
         cur.execute(f"SELECT * FROM tickets WHERE id='{id}'")
         data = cur.fetchone()
         return Ticket(**data)
+
+    @classmethod
+    def find_by_pool(cls, pool: Pool):
+        """
+        Searches the database for all tickets in pool
+
+        :param Pool pool: The pool to search against
+
+        :returns: List of corresponding Ticket objects
+        :rtype: :class:`models.Tickets`
+        """
+
+        cur = g.db.cursor(dictionary=True)
+        cur.execute("SELECT * FROM tickets where pool_id=%s", (pool.id,))
+        data = cur.fetchall()
+        return [Ticket(**data) for data in data]
