@@ -98,3 +98,39 @@ def get_current_pools(**kwargs):
 
     # Return message
     return m.to_dict()
+
+
+@api.route("/balance", methods=["GET"])
+@protected_or_admin_guard
+def get_balance(**kwargs):
+    """
+    Returns current user balance
+    """
+
+    # Get Current Balance
+    bal = UserBalance.get_user_balance(g.user_id)
+
+    # Format Message
+    m = Message("success")
+    m["balance"] = bal.amount
+
+    # Return message
+    return m.to_dict()
+
+
+@api.route("/tickets", methods=["GET"])
+@protected_or_admin_guard
+def get_tickets(**kwargs):
+    """
+    Returns currently held tickets
+    """
+
+    # Get all tickets
+    tickets = Ticket.find_by_user(g.user_id)
+
+    # Format Message
+    m = Message("success")
+    m["tickets"] = [t.to_dict() for t in tickets]
+
+    # Return message
+    return m.to_dict()

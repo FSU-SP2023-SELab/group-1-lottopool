@@ -84,6 +84,22 @@ class Ticket:
         return Ticket(**data)
 
     @classmethod
+    def find_by_user(cls, user_id: str):
+        """
+        Searches the database for all of a user's Tickets
+
+        :param str id: The UUID to search for
+
+        :returns: The corresponding Ticket object
+        :rtype: :class:`models.Tickets`
+        """
+
+        cur = g.db.cursor(dictionary=True)
+        cur.execute("SELECT * FROM tickets WHERE user_id=%s", (user_id,))
+        data = cur.fetchall()
+        return [Ticket(**d) for d in data]
+
+    @classmethod
     def find_by_pool(cls, pool: Pool, user_id: str = ""):
         """
         Searches the database for all tickets in pool
