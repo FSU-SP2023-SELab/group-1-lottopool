@@ -1,7 +1,7 @@
 from flask import Blueprint, g
 
 from .messages import Message, ErrorMessage
-from .security.guards import protected_or_admin_guard
+from .security.guards import login_guard
 from ..models import Pool, Ticket, UserBalance
 
 # create main api blueprint
@@ -47,9 +47,38 @@ def landing_page():
     return m.to_dict()
 
 
-@api.route("/dashboard", methods=["GET"])
-@protected_or_admin_guard
-def dashboard(**kwargs):
+@api.route("/current_pools", methods=["GET"])
+@login_guard
+def get_current_pools():
+    """
+    Gets all current pools
+    """
+
+    # Get current pools
+    pools = Pool.get_current_pools()
+
+    # Modify the dicts before we ship it
+    pool_data_list = []
+    for pool in pools:
+        pool_data = pool.to_dict()
+        pool_data["tix_count"] = pool.get_ticket_count()
+        pool_data["user_count"] = pool.get_ticket_count(unique=True)
+        pool_data["my_tickets"] = [
+            t.to_dict() for t in Ticket.find_by_pool(pool, g.user_id)
+        ]
+        pool_data_list.append(pool_data)
+
+    # Format Message
+    m = Message("success")
+    m["pools"] = pool_data_list
+
+    # Return message
+    return m.to_dict()
+
+
+@api.route("/user/dashboard", methods=["GET"])
+@login_guard
+def get_user_dashboard():
     """
     Returns total earnings and tickets held
     """
@@ -73,36 +102,9 @@ def dashboard(**kwargs):
     return m.to_dict()
 
 
-@api.route("/pools", methods=["GET"])
-@protected_or_admin_guard
-def get_current_pools(**kwargs):
-    """
-    Gets all current pools
-    """
-
-    # Get current pools
-    pools = Pool.get_current_pools()
-
-    # Modify the dicts before we ship it
-    pool_data_list = []
-    if pools:
-        for pool in pools:
-            pool_data = pool.to_dict()
-            pool_data["tix_count"] = pool.get_ticket_count()
-            pool_data["user_count"] = pool.get_ticket_count(unique=True)
-            pool_data_list.append(pool_data)
-
-    # Format Message
-    m = Message("success")
-    m["pools"] = pool_data_list
-
-    # Return message
-    return m.to_dict()
-
-
-@api.route("/balance", methods=["GET"])
-@protected_or_admin_guard
-def get_balance(**kwargs):
+@api.route("/user/balance", methods=["GET"])
+@login_guard
+def get_user_balance():
     """
     Returns current user balance
     """
@@ -118,9 +120,9 @@ def get_balance(**kwargs):
     return m.to_dict()
 
 
-@api.route("/tickets", methods=["GET"])
-@protected_or_admin_guard
-def get_tickets(**kwargs):
+@api.route("/user/tickets", methods=["GET"])
+@login_guard
+def get_user_tickets():
     """
     Returns currently held tickets
     """
@@ -131,6 +133,33 @@ def get_tickets(**kwargs):
     # Format Message
     m = Message("success")
     m["tickets"] = [t.to_dict() for t in tickets]
+
+    # Return message
+    return m.to_dict()
+
+
+@api.route("/user/pools", methods=["GET"])
+@login_guard
+def get_user_pools():
+    """
+    Returns all pools user has ever enrolled in
+    """
+
+    # Get all tickets
+    pools = Pool.get_user_pools(g.user_id)
+
+    # Get associated Tickets
+    pool_data_list = []
+    for pool in pools:
+        pool_data = pool.to_dict()
+        pool_data["tickets"] = [
+            t.to_dict() for t in Ticket.find_by_pool(pool, g.user_id)
+        ]
+        pool_data_list.append(pool_data)
+
+    # Format Message
+    m = Message("success")
+    m["pools"] = pool_data_list
 
     # Return message
     return m.to_dict()

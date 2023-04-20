@@ -144,7 +144,30 @@ class Pool:
         cur.execute("SELECT * FROM pools WHERE end > CURDATE()")
         data = cur.fetchall()
 
+        # Return either an empty list or list of Pools
+        return [Pool(**d) for d in data]
+
+    @classmethod
+    def get_user_pools(cls, user_id: str):
+        """
+        Searches the database all pools a user is/was enrolled in
+
+        :returns: The corresponding Pool object
+        :rtype: :class:`models.Pool`
+        """
+
+        # Execute query
+        cur = g.db.cursor(dictionary=True)
+        cur.execute(
+            """
+            SELECT * FROM pools WHERE id IN (
+                SELECT DISTINCT pool_id FROM tickets
+                WHERE user_id=%s
+            )
+            """,
+            (user_id,),
+        )
+        data = cur.fetchall()
+
         # If no row, None. Else, list of Pools
-        if len(data) == 0:
-            return None
         return [Pool(**d) for d in data]
