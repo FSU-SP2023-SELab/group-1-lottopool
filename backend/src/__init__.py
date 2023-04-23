@@ -74,8 +74,8 @@ def create_app(test_config=None):
         app.config.update(**test_config)
 
     # Import blueprints
-    from .blueprints import index, api, db_handler, messages
-    from .blueprints import index, api, exception, messages, stripe_service
+    from .blueprints import index, api, db_handler, messages, stripe_service
+
     app.register_blueprint(index)
     app.register_blueprint(api)
     app.register_blueprint(db_handler)
