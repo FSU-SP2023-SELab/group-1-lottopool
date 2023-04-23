@@ -75,10 +75,12 @@ def create_app(test_config=None):
 
     # Import blueprints
     from .blueprints import index, api, db_handler, messages
+    from .blueprints import index, api, exception, messages, stripe_service
     app.register_blueprint(index)
     app.register_blueprint(api)
     app.register_blueprint(db_handler)
     app.register_blueprint(messages)
+    app.register_blueprint(stripe_service)
 
     # Return app object
     return app
