@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, request
 import os
 import stripe
 
@@ -6,35 +6,41 @@ bp_url_prefix = "/payment"
 stripe_service = Blueprint("stripe_service", __name__, url_prefix=bp_url_prefix)
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
+endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET")
+client_origin_url = os.getenv("CLIENT_ORIGIN_URL")
 
 
-@stripe_service.route("/create-payment-intent", methods=["GET"])
-def create_payment():
-    # Create a PaymentIntent with the amount,
-    # currency, and a payment method type.
-    # See the documentation [0] for the full list of supported parameters.
-    #
-    # [0] https://stripe.com/docs/api/payment_intents/create
+@stripe_service.route("/webhook", methods=["POST"])
+def stripe_webhook():
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get("Stripe-Signature", type=str)
+
     try:
-        intent = stripe.PaymentIntent.create(
-            amount=1999,
-            currency="EUR",
-            automatic_payment_methods={
-                "enabled": True,
-            },
-        )
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
 
-        # Send PaymentIntent details to the front end.
-        return jsonify({"clientSecret": intent.client_secret})
-    except stripe.error.StripeError as e:  # type: ignore
-        return jsonify({"error": {"message": str(e)}}), 400
-    except Exception as e:
-        return jsonify({"error": {"message": str(e)}}), 400
+    except ValueError as e:
+        # Invalid payload
+        return "Invalid payload", 400
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return "Invalid signature", 400
+
+    # Handle the checkout.session.completed event
+    if event["type"] == "checkout.session.completed":
+        print("Payment was successful.")
+        # TODO: run some custom code here
+        user_id = event["data"]["object"]["client_reference_id"]
+        print("post payment id: ", user_id)
+
+    return "Success", 200
 
 
 @stripe_service.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
+    authId = request.headers.get("Auth-Token", type=str)
+    print("pre payment id: ", authId)
     session = stripe.checkout.Session.create(
+        client_reference_id=authId,
         line_items=[
             {
                 "price_data": {
@@ -47,8 +53,11 @@ def create_checkout_session():
                 "quantity": 1,
             }
         ],
+        automatic_tax={
+            "enabled": True,
+        },
         mode="payment",
-        success_url="http://localhost:3000/",
-        cancel_url="http://localhost:3000/",
+        success_url=client_origin_url,
+        cancel_url=client_origin_url,
     )
     return {"success": True, "redirect": session.url}
