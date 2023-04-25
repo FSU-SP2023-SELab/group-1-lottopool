@@ -8,6 +8,11 @@ from ..models import Pool, Ticket, UserBalance
 api = Blueprint("api", __name__)
 
 
+@api.route("/status", methods=["GET"])
+def status():
+    return Message("Ok!").to_dict()
+
+
 @api.route("/landing", methods=["GET"])
 def landing_page():
     """

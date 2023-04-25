@@ -7,7 +7,7 @@ def test_index(client, db_fixture):  # noqa: F811
     # With context...
     with client:
         # Get index
-        res = client.get("/api/landing", follow_redirects=True)
+        res = client.get("/api/status", follow_redirects=True)
 
         # Assert that it's ok
         assert res.status_code == 200
