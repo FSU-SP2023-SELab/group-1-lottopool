@@ -4,7 +4,7 @@ def test_index(client):
     # With context...
     with client:
         # Get index
-        res = client.get("/api/hello-world", follow_redirects=True)
+        res = client.get("/api/landing", follow_redirects=True)
 
         # Assert that it's ok
         assert res.status_code == 200
