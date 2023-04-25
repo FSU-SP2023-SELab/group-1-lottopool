@@ -19,7 +19,7 @@ def landing_page():
     if not lp:
         return ErrorMessage(
             "No Pool Found", "Could not find a pool with matching criteria!"
-        )
+        ).to_dict()
 
     # Get people in pool
     tix_count = lp.get_ticket_count()

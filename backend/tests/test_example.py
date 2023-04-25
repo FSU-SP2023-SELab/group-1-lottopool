@@ -1,4 +1,7 @@
-def test_index(client):
+from .fixtures import db_fixture  # noqa
+
+
+def test_index(client, db_fixture):  # noqa: F811
     """Ensure that an index page is recieved"""
 
     # With context...
