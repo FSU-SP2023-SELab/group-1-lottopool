@@ -44,7 +44,7 @@ def get_bearer_token_from_request():
     return bearer_token
 
 
-def protected_or_admin_guard(f):
+def login_guard(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = get_bearer_token_from_request()
@@ -54,13 +54,36 @@ def protected_or_admin_guard(f):
         if not isinstance(validated_token, dict):
             return json_abort(403, {"message": "Permission denied"})
 
+        # Set globals for this context
         g.access_token = validated_token
+        g.user_id = g.access_token.get("sub")
+
+        # Check if the user is protected
+        if validated_token.get("sub"):
+            return f(*args, **kwargs)
+        else:
+            return json_abort(403, {"message": "Permission denied"})
+
+    return decorated
+
+
+def admin_guard(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = get_bearer_token_from_request()
+        validated_token = auth0_service.validate_jwt(token)
+
+        # Checks to make sure validated_token is dict
+        if not isinstance(validated_token, dict):
+            return json_abort(403, {"message": "Permission denied"})
+
+        # Set globals for this context
+        g.access_token = validated_token
+        g.user_id = g.access_token.get("sub")
 
         # Check if the user is an admin or protected
-        if auth0_service.has_admin_role(validated_token):
-            return f(*args, **kwargs, admin=True)
-        elif validated_token.get("sub"):
-            return f(*args, **kwargs, admin=False)
+        if validated_token.get("sub") and auth0_service.has_admin_role(validated_token):
+            return f(*args, **kwargs)
         else:
             return json_abort(403, {"message": "Permission denied"})
 

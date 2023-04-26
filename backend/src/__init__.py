@@ -25,7 +25,7 @@ def create_app(test_config=None):
 
     # Initialize database
     db_check_first_run()
-    
+
     # Initialize Auth0
     auth0_service.initialize(auth0_domain, auth0_audience)
 
@@ -40,7 +40,7 @@ def create_app(test_config=None):
         x_xss_protection=False,
         x_content_type_options=True,
     )
-    
+
     # Security Header Middleware
     @app.after_request
     def add_headers(response):
@@ -74,9 +74,11 @@ def create_app(test_config=None):
         app.config.update(**test_config)
 
     # Import blueprints
-    from .blueprints import index, api, db_handler, messages
+    from .blueprints import index, api, db_handler, messages, admin
+
     app.register_blueprint(index)
     app.register_blueprint(api)
+    app.register_blueprint(admin)
     app.register_blueprint(db_handler)
     app.register_blueprint(messages)
 
