@@ -2,11 +2,9 @@
 
 ## Project Description
 
-*TO BE WRITTEN LATER*
+Lottopool is a lottery pooling system where users can buy lottery tickets through our platform. We'll pool them together and split earnings equally amongst tickets in a pool if at least one of the tickets wins. The platform will be a website where users can login via Auth0 and buy a certain amount of tickets at a list price. We will then manage keeping track of buyers, physically acquiring the tickets, and splitting earnings if there is a winning ticket.
 
-## Distribution of Work
-
-*ALSO TO BE WRITTEN LATER*
+More documentation regarding division of labor, Use Case & Sequence diagrams, Implementation & Testing, etc. can be found in the [paperwork](paperwork/) folder.
 
 ## List of Libraries
 
@@ -14,7 +12,7 @@ See `requirements.txt` and `frontend/package.json`.
 
 ## Contributing
 
-To see this project's contribution guidelines, please see [CONTRIBUTING.md](./CONTRIBUTING.md).
+We're not really accepting external pull requests at the moment, as this is intended to be a group project for Florida State University's Computer Science program. To be honest, the only reason the repo is public instead of private is so we can enforce branch protection rules. Regardless, to see this project's contribution guidelines, please see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Setup
 

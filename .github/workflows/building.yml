@@ -23,30 +23,24 @@ on:
 # ===== [ Jobs ] ==============================================================
 #
 
+# Set env vars
+env:
+  REGISTRY: ghcr.io
+
+# Establish permissions for GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
+
+# Define jobs
+# NOTE: we define two separate jobs rather than using a matrix because it makes
+#       defining build args for specific jobs easier that way. also just looks
+#       nicer on the GitHub website.
 jobs:
-  build-images:
-    name: Build Docker Images
+  # 1.) Build Frontend
+  build-frontend:
+    name: Build Frontend
     runs-on: ubuntu-latest
-
-    # Set env vars
-    env:
-      REGISTRY: ghcr.io
-
-    # Define matrix to build both images
-    strategy:
-      matrix:
-        include:
-          - image: fsu-sp2023-selab/lp-backend
-            dockerfile: ./backend/Dockerfile
-            context: ./backend
-          - image: fsu-sp2023-selab/lp-frontend
-            dockerfile: ./frontend/Dockerfile
-            context: ./frontend
-
-    # Establish permissions for GITHUB_TOKEN
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       # 1.1.) Set up workspace
@@ -61,12 +55,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-        # 1.3) Get Metadata
+      # 1.3) Get Metadata
       - name: Format Metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ matrix.image }}
+          images: ${{ env.REGISTRY }}/fsu-sp2023-selab/lp-frontend
           tags: |
             type=raw,value=latest
             type=raw,value=${{ github.ref_name }}
@@ -77,11 +71,59 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       # 1.5) Build and Push
+      # NOTE: Frontend has build args, that must be defined here AND in
+      #       Dockerfile. Doppler env vars are accessed through secrets context.
       - name: Build and Push
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.dockerfile }}
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          #build-args: |
+          #  EXAMPLE=${{ secrets.EXAMPLE }}
+          push: true
+
+  # 2.) Build Backend
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      # 2.1.) Set up workspace
+      - name: Set up workspace
+        uses: actions/checkout@v3
+
+      # 2.2) Auth with GHCR
+      - name: Authenticate with GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2.3) Get Metadata
+      - name: Format Metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/fsu-sp2023-selab/lp-backend
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ github.ref_name }}
+            type=sha
+
+      # 2.4) Set up Docker build
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 2.5) Build and Push
+      # NOTE: Backend only has runtime env vars, no build args
+      - name: Build and Push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
