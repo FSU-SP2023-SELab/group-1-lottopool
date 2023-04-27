@@ -1,6 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, g
 import os
 import stripe
+from ..security.guards import login_guard
 
 bp_url_prefix = "/payment"
 stripe_service = Blueprint("stripe_service", __name__, url_prefix=bp_url_prefix)
@@ -36,6 +37,7 @@ def stripe_webhook():
 
 
 @stripe_service.route("/create-checkout-session", methods=["POST"])
+@login_guard
 def create_checkout_session():
     # grab headers sent from frontend
     authId = request.headers.get("Auth-Token", type=str)
