@@ -5,7 +5,7 @@ const LoginButton: Component = () => {
   const auth = useAuth0();
   return (
     <button
-      class="bg-black text-white rounded w-24 h-12"
+      class="border-2 border-primary text-primary font-bold rounded w-36 h-12 hover:bg-primary hover:text-white transition-colors"
       onclick={() => {
         if (!auth) return;
         if (auth.isAuthenticated()) {

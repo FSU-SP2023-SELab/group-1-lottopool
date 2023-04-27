@@ -11,7 +11,7 @@ render(
       clientId={import.meta.env.VITE_AUTH0_CLIENTID} // client_id from Auth0
       audience={import.meta.env.VITE_AUTH0_AUDIENCE} // implement with backend
       logoutRedirectUri={`${window.location.origin}`} // Absolute URI Auth0 logout redirect
-      loginRedirectUri={`${window.location.origin}`} // Absolute URI Auth0 login
+      loginRedirectUri={`${window.location.origin}/dashboard`} // Absolute URI Auth0 login
     >
       <Router>
         <App />
