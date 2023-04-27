@@ -1,6 +1,7 @@
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import mainArt from "../../assets/main_art.svg";
 import { useAuth0 } from "@rturnq/solid-auth0";
+import { Link } from "@solidjs/router";
 
 // const fetchProtected = async (userToken: Resource<string | undefined>): Promise<MessageTest> => {
 //   try {
@@ -32,12 +33,24 @@ const HomePage: Component = () => {
         <span class="text-primary text-2xl font-bold ">20</span> people have already entered the
         next pool!
       </p>
-      <button
-        class="bg-primary w-full max-w-sm h-16 text-white font-bold rounded hover:bg-hover transition-colors"
-        onClick={() => auth?.loginWithRedirect()}
+      <Show
+        when={auth?.isAuthenticated()}
+        fallback={
+          <button
+            class="bg-primary w-full text-lg max-w-sm h-16 text-white font-bold rounded hover:bg-hover transition-colors"
+            onClick={() => auth?.loginWithRedirect()}
+          >
+            Join Today
+          </button>
+        }
       >
-        Join Today
-      </button>
+        <Link
+          class="bg-primary w-full text-lg max-w-sm h-16 text-white font-bold rounded hover:bg-hover transition-colors flex items-center justify-center"
+          href="/dashboard"
+        >
+          Go To Dashboard
+        </Link>
+      </Show>
     </div>
   );
 };

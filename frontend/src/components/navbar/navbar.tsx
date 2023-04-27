@@ -1,4 +1,4 @@
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Show, createEffect, createSignal } from "solid-js";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Link } from "@solidjs/router";
 import { User } from "../../types";
@@ -7,6 +7,19 @@ import logo from "../../assets/lottopool_logo.svg";
 const Navbar: Component = () => {
   const auth = useAuth0();
   const [openNav, setOpenNav] = createSignal(false);
+
+  createEffect(() => {
+    window.addEventListener("click", function (e) {
+      if (document.getElementById("nav")?.contains(e.target as Node)) {
+        // Close after clicking inside
+        if (openNav()) setOpenNav(false);
+      } else {
+        // Clicked outside the box and not on nav button itself, close nav
+        if (document.getElementById("nav-button")?.contains(e.target as Node)) return;
+        if (openNav()) setOpenNav(false);
+      }
+    });
+  }, []);
 
   return (
     <header class="flex justify-between items-center max-w-4xl mx-auto h-20 px-4">
@@ -22,6 +35,7 @@ const Navbar: Component = () => {
       <div class="relative inline-block text-left">
         <div>
           <button
+            id="nav-button"
             class={`hover:bg-slate-100 p-2 rounded ${openNav() ? "bg-slate-100" : ""}`}
             onclick={() => setOpenNav((prev) => !prev)}
           >
@@ -53,6 +67,7 @@ const Navbar: Component = () => {
         </div>
 
         <div
+          id="nav"
           class={` right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
             openNav() ? "absolute" : "hidden"
           }`}
