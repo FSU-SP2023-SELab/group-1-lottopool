@@ -51,6 +51,9 @@ class Pool:
     def __repr__(self) -> str:
         return f'Pool(name="{self.name}")'
 
+    def to_dict(self):
+        return self.__dict__
+
     def save(self):
         """Commits current changes to database"""
 
@@ -71,8 +74,24 @@ class Pool:
     def set_agency(self, agency: Agency):
         self.agency_id = agency.id
 
+    def get_ticket_count(self, unique: bool = False):
+        """
+        :param bool unique: Return count of unique individuals or total tickets
+
+        :returns: Gets count of tickets in pool
+        :rtype: int
+        """
+
+        # Execute query
+        cur = g.db.cursor(dictionary=True)
+        q = "SELECT COUNT(*) AS count FROM tickets WHERE pool_id=%s"
+        if unique:
+            q += " GROUP BY user_id"
+        cur.execute(q, (self.id,))
+        return cur.fetchone()["count"]
+
     @classmethod
-    def find_by_uuid(self, id: str):
+    def find_by_uuid(cls, id: str):
         """
         Searches the database for a Pool by ID
 
@@ -91,3 +110,64 @@ class Pool:
         if not data:
             return None
         return Pool(**data)
+
+    @classmethod
+    def find_latest(cls):
+        """
+        Searches the database for a Pool by most recent? start time
+
+        :returns: The corresponding Pool object
+        :rtype: :class:`models.Pool`
+        """
+
+        # Execute query
+        cur = g.db.cursor(dictionary=True)
+        cur.execute("SELECT * FROM pools ORDER BY start DESC LIMIT 1")
+        data = cur.fetchone()
+
+        # If no row, None. Else, Pool
+        if not data:
+            return None
+        return Pool(**data)
+
+    @classmethod
+    def get_current_pools(cls):
+        """
+        Searches the database for all current pools
+
+        :returns: The corresponding Pool object
+        :rtype: :class:`models.Pool`
+        """
+
+        # Execute query
+        cur = g.db.cursor(dictionary=True)
+        cur.execute("SELECT * FROM pools WHERE end > CURDATE()")
+        data = cur.fetchall()
+
+        # Return either an empty list or list of Pools
+        return [Pool(**d) for d in data]
+
+    @classmethod
+    def get_user_pools(cls, user_id: str):
+        """
+        Searches the database all pools a user is/was enrolled in
+
+        :returns: The corresponding Pool object
+        :rtype: :class:`models.Pool`
+        """
+
+        # Execute query
+        cur = g.db.cursor(dictionary=True)
+        cur.execute(
+            """
+            SELECT * FROM pools WHERE id IN (
+                SELECT DISTINCT pool_id FROM tickets
+                WHERE user_id=%s
+            )
+            """,
+            (user_id,),
+        )
+        data = cur.fetchall()
+
+        # If no row, None. Else, list of Pools
+        return [Pool(**d) for d in data]
