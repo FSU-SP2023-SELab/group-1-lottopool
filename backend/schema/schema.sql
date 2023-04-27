@@ -49,8 +49,9 @@ CREATE TABLE `lottopool`.`tickets`(
     `pool_id` UUID,
     `user_id` VARCHAR(100),
     `picture_url` VARCHAR(255),
+    `numbers` VARCHAR(50),
     `acquired` TINYINT,
-    `paid_out` TINYINT,
+    `paid_for` TINYINT,
     FOREIGN KEY(`pool_id`) REFERENCES `pools`(`id`),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
