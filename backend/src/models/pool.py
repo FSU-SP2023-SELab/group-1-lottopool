@@ -37,7 +37,7 @@ class Pool:
         end: datetime = None,
         jackpot: float = None,
         ppt: float = None,
-        won: bool = None,
+        won: int = None,
     ):
         self.id = id if id else str(uuid.uuid4())
         self.name = name
@@ -71,10 +71,20 @@ class Pool:
             self.__dict__,
         )
 
+    def set_won_and_save(self, won: int):
+        """uh?"""
+
+        # Set value
+        self.won = won
+
+        # SQL
+        cur = g.db.cursor(dictionary=True)
+        cur.execute("UPDATE pools SET won=%s WHERE id=%s", (self.won, self.id))
+
     def set_agency(self, agency: Agency):
         self.agency_id = agency.id
 
-    def get_ticket_count(self, unique: bool = False):
+    def get_ticket_count(self, unique: bool = False) -> int:
         """
         :param bool unique: Return count of unique individuals or total tickets
 
@@ -88,7 +98,28 @@ class Pool:
         if unique:
             q += " GROUP BY user_id"
         cur.execute(q, (self.id,))
-        return cur.fetchone()["count"]
+
+        # Get value and return
+        cnt = cur.fetchone()["count"]
+        if not cnt:
+            return 0
+        return cnt
+
+    def get_breakdown(self) -> "dict[str, int]":
+        """
+        Gets a breakdown of how many tickets each person bought
+        """
+
+        # Execure query
+        cur = g.db.cursor(dictionary=True)
+        q = "SELECT user_id, COUNT(id) AS cnt FROM tickets WHERE pool_id=%s GROUP BY user_id"
+        cur.execute(q, (self.id,))
+
+        # Get value and return
+        data = cur.fetchall()
+        if len(data) == 0:
+            return {}
+        return {d["user_id"]: d["cnt"] for d in data}
 
     @classmethod
     def find_by_uuid(cls, id: str):
