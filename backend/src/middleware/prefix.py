@@ -1,3 +1,6 @@
+from ..blueprints.messages.message import ErrorMessage
+
+
 class PrefixMiddleware(object):
     """
     A middleware class for Flask, which configures it to prefix all endpoints
@@ -16,4 +19,9 @@ class PrefixMiddleware(object):
             return self.app(environ, start_response)
         else:
             start_response("404", [("Content-Type", "text/plain")])
-            return ["This url does not belong to the app.".encode()]
+            return (
+                ErrorMessage(
+                    "Not Found", "The requested URL is not on this server."
+                ).to_dict(),
+                404,
+            )

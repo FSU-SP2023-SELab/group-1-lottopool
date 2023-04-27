@@ -5,7 +5,8 @@ from flask_cors import CORS
 from .db import db_check_first_run
 from .middleware import PrefixMiddleware
 from flask_talisman import Talisman
-from src.blueprints.security.auth0_service import auth0_service
+from .blueprints.security.auth0_service import auth0_service
+from .blueprints.messages.message import ErrorMessage
 
 
 def create_app(test_config=None):
@@ -66,6 +67,16 @@ def create_app(test_config=None):
     # Init WSGI server to serve everything prefixed w/ `/api`
     # It will return 404 errors for anything not in thie subdir
     app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix="/api")
+
+    # Add 404 Handler
+    @app.errorhandler(404)
+    def not_found_error(error):
+        return (
+            ErrorMessage(
+                "Not Found", "The requested URL is not on this server."
+            ).to_dict(),
+            404,
+        )
 
     # Handle testing config, if it was passed in
     # We call this second because we want to overwite MONGO_URI
