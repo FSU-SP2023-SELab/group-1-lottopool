@@ -1,27 +1,23 @@
-import { Component, Show } from "solid-js";
+import { Component, Show, createResource } from "solid-js";
 import mainArt from "../../assets/main_art.svg";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Link } from "@solidjs/router";
+import { iLanding } from "./types";
 
-// const fetchProtected = async (userToken: Resource<string | undefined>): Promise<MessageTest> => {
-//   try {
-//     const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/protected`, {
-//       headers: {
-//         Authorization: `Bearer ${userToken}`,
-//       },
-//     });
-//     if (result.status == 200) return result.json();
-//   } catch (e) {
-//     console.log("ERROR", e);
-//     return Promise.reject("You are not authorized");
-//   }
-//   return Promise.reject("An error has occured");
-// };
+const fetchLanding = async (): Promise<iLanding> => {
+  try {
+    const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/landing`);
+    if (result.status == 200) return await result.json();
+  } catch (e) {
+    console.log("ERROR", e);
+    return Promise.reject(e);
+  }
+  return Promise.reject("An error has occured");
+};
 
 const HomePage: Component = () => {
   const auth = useAuth0();
-  //   const [userToken] = createResource(() => auth && auth.getToken());
-  //   const [message] = createResource(userToken, fetchProtected);
+  const [landing] = createResource(fetchLanding);
 
   return (
     <div class="max-w-3xl mx-auto flex flex-col items-center justify-between h-[calc(100vh-5rem)] py-8 px-4 gap-4">
@@ -30,8 +26,8 @@ const HomePage: Component = () => {
       </h1>
       <img class="w-96" src={mainArt} />
       <p class="font-semibold text-slate-900 text-center w-48">
-        <span class="text-primary text-2xl font-bold ">20</span> people have already entered the
-        next pool!
+        <span class="text-primary text-2xl font-bold ">{landing()?.user_count}</span>{" "}
+        {landing()?.user_count == 1 ? "person has" : "people have"} already entered the next pool!
       </p>
       <Show
         when={auth?.isAuthenticated()}

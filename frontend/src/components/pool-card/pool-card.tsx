@@ -1,9 +1,18 @@
-import { Component } from "solid-js";
+import { Component, Show, createSignal } from "solid-js";
 import powerballLogo from "../../assets/powerball_logo.jpg";
+import { iUserPool } from "../../routes/dashboard-page/types";
 
-const PoolCard: Component = () => {
+const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) => {
+  const enteredPool = props.pool.my_tickets.length > 0;
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "short",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
   return (
-    <div class="bg-slate-100 rounded p-4 border-primary border-2 relative">
+    <div class="bg-slate-100 rounded p-4 border-primary border-2 relative w-full">
       <a
         class="absolute top-4 right-4"
         href="https://www.flalottery.com/powerball"
@@ -26,16 +35,50 @@ const PoolCard: Component = () => {
         </svg>
       </a>
 
-      <p class="text-sm">Next Pool:</p>
+      <p class="font-bold">{props.pool.name}</p>
       <div class="my-8 flex flex-col gap-2">
-        <p class="font-semibold text-lg">Wednesday, April 23, 2023</p>
+        <div>
+          <p class="text-sm">
+            Started: {new Date(props.pool.start).toLocaleDateString("en-US", dateOptions)}
+          </p>
+          <p class="font-semibold text-lg">
+            Ending: {new Date(props.pool.end).toLocaleDateString("en-US", dateOptions)}
+          </p>
+        </div>
         <img class="h-6 w-fit" src={powerballLogo} />
-        <p class="font-bold text-3xl">$170 Million</p>
-        <p class="font-semibold text-md text-primary">20 People Entered</p>
+        <p class="font-bold text-3xl">${props.pool.jackpot.toLocaleString("en-US")} Jackpot</p>
+        <p class="font-semibold text-md text-primary">
+          {props.pool.user_count} {props.pool.user_count == 1 ? "Person" : "People"} Entered
+        </p>
+        <p class="font-semibold text-md text-primary">
+          {props.pool.tix_count} {props.pool.tix_count == 1 ? "Ticket" : "Tickets"} Bought
+        </p>
       </div>
-      <button class="w-full text-center bg-primary text-white h-12 rounded font-semibold text-lg hover:bg-hover">
-        Buy Tickets
-      </button>
+      {enteredPool ? (
+        <button class="w-full text-center border-primary border-2 text-primary h-12 rounded font-semibold text-lg hover:bg-hover hover:text-white hover:border-hover">
+          Buy More Tickets for ${props.pool.ppt}
+        </button>
+      ) : (
+        <button class="w-full text-center bg-primary text-white h-12 rounded font-semibold text-lg hover:bg-hover">
+          Buy Tickets for ${props.pool.ppt}
+        </button>
+      )}
+
+      <Show when={enteredPool}>
+        <div class="mt-8">
+          <p class="font-bold">
+            Entered with {props.pool.my_tickets.length}
+            {props.pool.my_tickets.length == 1 ? " Ticket" : " Tickets"}
+          </p>
+          <p class="font-bold">
+            Potential Earnings: $
+            {(
+              (props.pool.jackpot / props.pool.tix_count) *
+              props.pool.my_tickets.length
+            ).toLocaleString("en-US")}
+          </p>
+        </div>
+      </Show>
     </div>
   );
 };
