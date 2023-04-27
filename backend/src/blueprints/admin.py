@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request
+from flask import Blueprint, request
 
 from .security.guards import admin_guard
 from ..models import Pool, Ticket, UserBalance
@@ -76,7 +76,7 @@ def admin_list_tickets(pool_id: str):
     return m.to_dict()
 
 
-@admin.route("pool/haswon", methods=["POST"])
+@admin.route("pool/has_won", methods=["POST"])
 @admin_guard
 def admin_has_won(pool_id: str, victory: int):
     # Get pool by UUID
@@ -105,9 +105,9 @@ def admin_has_won(pool_id: str, victory: int):
     return m.to_dict()
 
 
-@admin.route("pool/haswon", methods=["POST"])
+@admin.route("pool/mark_purchased", methods=["POST"])
 @admin_guard
-def admin_has_won(ticket_id: str, victory: int):
+def admin_mark_purchased(ticket_id: str, victory: int):
     # Get pool by UUID
     print(ticket_id)
     ticket = Ticket.find_by_uuid(ticket_id)
