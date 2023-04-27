@@ -2,7 +2,7 @@ import { useAuth0 } from "@rturnq/solid-auth0";
 import { Component, Show } from "solid-js";
 import PoolCard from "../../components/pool-card";
 
-const Dashboard: Component = () => {
+const DashboardPage: Component = () => {
   const auth = useAuth0();
 
   return (
@@ -29,4 +29,4 @@ const Dashboard: Component = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

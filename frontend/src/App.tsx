@@ -3,7 +3,9 @@ import { Routes, Route } from "@solidjs/router";
 import HomePage from "./routes/home-page";
 import Navbar from "./components/navbar";
 import ProfilePage from "./routes/profile-page";
-import Dashboard from "./routes/dashboard";
+import DashboardPage from "./routes/dashboard-page";
+import AboutUsPage from "./routes/about-us-page";
+import HowPage from "./routes/how-page/how-page";
 
 const App: Component = () => {
   return (
@@ -11,7 +13,9 @@ const App: Component = () => {
       <Navbar />
       <Routes>
         <Route path={"/"} component={HomePage} />
-        <Route path={"/dashboard"} component={Dashboard} />
+        <Route path={"/dashboard"} component={DashboardPage} />
+        <Route path={"/about"} component={AboutUsPage} />
+        <Route path={"/how"} component={HowPage} />
         <Route path={"/profile"} component={ProfilePage} />
       </Routes>
     </div>
