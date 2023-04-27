@@ -37,8 +37,13 @@ def stripe_webhook():
 
 @stripe_service.route("/create-checkout-session", methods=["POST"])
 def create_checkout_session():
+    # grab headers sent from frontend
     authId = request.headers.get("Auth-Token", type=str)
+    tiketNums = request.headers.get("Ticket-Nums", type=str)
+    poolId = request.headers.get("Pool-Id", type=str)
+
     print("pre payment id: ", authId)
+    # checkout session object creation
     session = stripe.checkout.Session.create(
         client_reference_id=authId,
         line_items=[
@@ -48,7 +53,7 @@ def create_checkout_session():
                     "product_data": {
                         "name": "Ticket",
                     },
-                    "unit_amount": 100,
+                    "unit_amount": 250,
                 },
                 "quantity": 1,
             }
@@ -60,4 +65,8 @@ def create_checkout_session():
         success_url=client_origin_url,
         cancel_url=client_origin_url,
     )
+
+    # TODO: Talk to database here
+    poolId = poolId
+    tiketNums = tiketNums
     return {"success": True, "redirect": session.url}

@@ -6,6 +6,9 @@ import { createSignal } from "solid-js";
 const CheckoutButton: Component = () => {
   const auth = useAuth0();
   const [sessionUrl, setSessionUrl] = createSignal("");
+  //creating these varaibles as signals for now, not sure what the best way to set them is
+  const [ticketNums, setTicketNums] = createSignal("");
+  const [poolId, setPoolId] = createSignal("");
   return (
     <button
       class="bg-black text-white rounded w-24 h-12"
@@ -15,7 +18,12 @@ const CheckoutButton: Component = () => {
           `${import.meta.env.VITE_BACKEND_URL}/api/payment/create-checkout-session`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Auth-Token": authId },
+            headers: {
+              "Content-Type": "application/json",
+              "Auth-Token": authId,
+              "Ticket-Nums": ticketNums(),
+              "Pool-Id": poolId(),
+            },
           }
         );
         const data = await response.json();
