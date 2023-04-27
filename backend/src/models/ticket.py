@@ -71,6 +71,9 @@ class Ticket:
     def set_pool(self, pool: Pool):
         self.pool_id = pool.id
 
+    def set_paid_for(self, paid_for: bool):
+        self.paid_for = paid_for
+
     @classmethod
     def find_by_uuid(cls, id: str):
         """

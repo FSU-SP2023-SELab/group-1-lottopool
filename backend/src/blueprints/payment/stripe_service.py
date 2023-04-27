@@ -30,11 +30,16 @@ def stripe_webhook():
     # Handle the checkout.session.completed event
     if event["type"] == "checkout.session.completed":
         print("Payment was successful.")
-        # TODO: run some custom code here
-        user_id = event["data"]["object"]["client_reference_id"]
-        print("post payment id: ", user_id)
+        # client_reference_id is the ticket id
+        ticket_id = event["data"]["object"]["client_reference_id"]
+        updatedTicket = Ticket.find_by_uuid(ticket_id)
+        updatedTicket.set_paid_for(True)
+        updatedTicket.save()
+        return "Success", 200
+    else:
+        print("Payment was unsuccessful.")
 
-    return "Success", 200
+    return "Failure", 400
 
 
 @stripe_service.route("/create-checkout-session", methods=["GET"])
@@ -46,9 +51,12 @@ def create_checkout_session():
     poolId = args.get("poolId", "0")
 
     print("pre payment id: ", g.user_id)
+
+    checkoutTicket = Ticket(user_id=g.user_id, pool_id=poolId, numbers=ticketNums)
     # checkout session object creation
     session = stripe.checkout.Session.create(
-        client_reference_id=g.user_id,
+        # client_reference_id is the ticket id
+        client_reference_id=checkoutTicket.id,
         line_items=[
             {
                 "price_data": {
@@ -69,7 +77,5 @@ def create_checkout_session():
         cancel_url=client_origin_url,
     )
 
-    # TODO: Talk to database here
-    checkoutTicket = Ticket(user_id=g.user_id, pool_id=poolId, numbers=ticketNums)
     checkoutTicket.save()
     return {"success": True, "redirect": session.url}
