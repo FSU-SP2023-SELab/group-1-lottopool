@@ -36,18 +36,18 @@ def stripe_webhook():
     return "Success", 200
 
 
-@stripe_service.route("/create-checkout-session", methods=["POST"])
+@stripe_service.route("/create-checkout-session", methods=["GET"])
 @login_guard
 def create_checkout_session():
+    args = request.args
     # grab headers sent from frontend
-    authId = request.headers.get("Auth-Token", type=str)
-    tiketNums = request.headers.get("Ticket-Nums", type=str)
-    poolId = request.headers.get("Pool-Id", type=str)
+    tiketNums = args.get("ticketNums", type=str)
+    poolId = args.get("poolId", type=str)
 
-    print("pre payment id: ", authId)
+    print("pre payment id: ", g.user_id)
     # checkout session object creation
     session = stripe.checkout.Session.create(
-        client_reference_id=authId,
+        client_reference_id=g.user_id,
         line_items=[
             {
                 "price_data": {
