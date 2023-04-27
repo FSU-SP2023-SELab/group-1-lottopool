@@ -2,6 +2,7 @@ from flask import Blueprint, request, g
 import os
 import stripe
 from ..security.guards import login_guard
+from ...models.ticket import Ticket
 
 bp_url_prefix = "/payment"
 stripe_service = Blueprint("stripe_service", __name__, url_prefix=bp_url_prefix)
@@ -40,9 +41,9 @@ def stripe_webhook():
 @login_guard
 def create_checkout_session():
     args = request.args
-    # grab headers sent from frontend
-    tiketNums = args.get("ticketNums", type=str)
-    poolId = args.get("poolId", type=str)
+    # grab headers sent from frontend, default 0
+    ticketNums = args.get("ticketNums", "0")
+    poolId = args.get("poolId", "0")
 
     print("pre payment id: ", g.user_id)
     # checkout session object creation
@@ -69,6 +70,6 @@ def create_checkout_session():
     )
 
     # TODO: Talk to database here
-    poolId = poolId
-    tiketNums = tiketNums
+    checkoutTicket = Ticket(user_id=g.user_id, pool_id=poolId, numbers=ticketNums)
+    checkoutTicket.save()
     return {"success": True, "redirect": session.url}
