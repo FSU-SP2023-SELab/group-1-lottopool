@@ -14,8 +14,8 @@ const Navbar: Component = () => {
         <h1 class="text-6xl mb-8 font-bold">Lottopool</h1>
       </Link>
       <div class="flex gap-4">
-      <CheckoutButton />
-        </div>
+        <CheckoutButton />
+      </div>
       <div class="flex gap-4">
         <LoginButton />
         <Show when={auth?.user()}>

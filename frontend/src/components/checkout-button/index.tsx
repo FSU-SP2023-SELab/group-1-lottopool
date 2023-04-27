@@ -1,3 +1,3 @@
-import CheckoutButton from './checkout-button';
+import CheckoutButton from "./checkout-button";
 
 export default CheckoutButton;
