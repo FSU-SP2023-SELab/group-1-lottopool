@@ -1,5 +1,6 @@
 import { Component } from "solid-js";
 import mainArt from "../../assets/main_art.svg";
+import { useAuth0 } from "@rturnq/solid-auth0";
 
 // const fetchProtected = async (userToken: Resource<string | undefined>): Promise<MessageTest> => {
 //   try {
@@ -17,7 +18,7 @@ import mainArt from "../../assets/main_art.svg";
 // };
 
 const HomePage: Component = () => {
-  //   const auth = useAuth0();
+  const auth = useAuth0();
   //   const [userToken] = createResource(() => auth && auth.getToken());
   //   const [message] = createResource(userToken, fetchProtected);
 
@@ -31,7 +32,10 @@ const HomePage: Component = () => {
         <span class="text-primary text-2xl font-bold ">20</span> people have already entered the
         next pool!
       </p>
-      <button class="bg-primary w-full max-w-sm h-16 text-white font-bold rounded hover:bg-hover transition-colors">
+      <button
+        class="bg-primary w-full max-w-sm h-16 text-white font-bold rounded hover:bg-hover transition-colors"
+        onClick={() => auth?.loginWithRedirect()}
+      >
         Join Today
       </button>
     </div>

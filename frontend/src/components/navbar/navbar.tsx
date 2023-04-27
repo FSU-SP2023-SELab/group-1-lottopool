@@ -12,7 +12,8 @@ const Navbar: Component = () => {
     <header class="flex justify-between items-center max-w-4xl mx-auto h-20 px-4">
       <Link class="flex items-center justify-center gap-3" href="/">
         <img src={logo} width={48} />
-        <h1 class="text-2xl  font-bold text-primary">Lottopool</h1>
+        <h1 class="text-2xl  font-bold text-primary relative">Lottopool</h1>
+        <h2 class="text-sm font-normal text-primary absolute top-12 mt-1">Florida</h2>
       </Link>
       {/* <nav class="gap-12 items-center text-primary font-bold hidden md:flex">
         <Link href="/about">About Us</Link>
@@ -21,7 +22,7 @@ const Navbar: Component = () => {
       <div class="relative inline-block text-left">
         <div>
           <button
-            class="hover:bg-slate-200 p-2 rounded"
+            class={`hover:bg-slate-100 p-2 rounded ${openNav() ? "bg-slate-100" : ""}`}
             onclick={() => setOpenNav((prev) => !prev)}
           >
             <Show
@@ -63,7 +64,7 @@ const Navbar: Component = () => {
           <Show when={auth?.user()}>
             <div class="py-1" role="none">
               <Link
-                class="text-gray-700 block px-4 py-2 text-sm"
+                class="text-gray-700 block px-4 py-2 text-sm hover:bg-slate-100"
                 role="menuitem"
                 tabindex="-1"
                 id="menu-item-0"
@@ -72,7 +73,7 @@ const Navbar: Component = () => {
                 Dashboard
               </Link>
               <Link
-                class="text-gray-700 block px-4 py-2 text-sm"
+                class="text-gray-700 block px-4 py-2 text-sm hover:bg-slate-100"
                 role="menuitem"
                 tabindex="-1"
                 id="menu-item-1"
@@ -84,7 +85,7 @@ const Navbar: Component = () => {
           </Show>
           <div class="py-1" role="none">
             <Link
-              class="text-gray-700 block px-4 py-2 text-sm"
+              class="text-gray-700 block px-4 py-2 text-sm hover:bg-slate-100"
               role="menuitem"
               tabindex="-1"
               id="menu-item-2"
@@ -93,7 +94,7 @@ const Navbar: Component = () => {
               About Us
             </Link>
             <Link
-              class="text-gray-700 block px-4 py-2 text-sm"
+              class="text-gray-700 block px-4 py-2 text-sm hover:bg-slate-100"
               role="menuitem"
               tabindex="-1"
               id="menu-item-3"
@@ -105,7 +106,7 @@ const Navbar: Component = () => {
 
           <div class="py-1" role="none">
             <button
-              class="text-primary block px-4 py-2 text-sm"
+              class="text-primary block px-4 py-2 text-sm w-full text-left hover:bg-slate-100"
               role="menuitem"
               tabindex="-1"
               id="menu-item-4"
