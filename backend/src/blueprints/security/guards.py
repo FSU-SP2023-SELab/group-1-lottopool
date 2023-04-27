@@ -1,6 +1,6 @@
 from functools import wraps
 from http import HTTPStatus
-from types import SimpleNamespace
+
 
 from flask import request, g
 
@@ -15,8 +15,6 @@ invalid_request_error = {
         Bearer access-token",
     "message": "Requires authentication",
 }
-
-admin_messages_permissions = SimpleNamespace(read="read:admin-messages")
 
 
 def get_bearer_token_from_request():
@@ -46,17 +44,50 @@ def get_bearer_token_from_request():
     return bearer_token
 
 
-def authorization_guard(function):
-    @wraps(function)
-    def decorator(*args, **kwargs):
+def login_guard(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
         token = get_bearer_token_from_request()
         validated_token = auth0_service.validate_jwt(token)
 
+        # Checks to make sure validated_token is dict
+        if not isinstance(validated_token, dict):
+            return json_abort(403, {"message": "Permission denied"})
+
+        # Set globals for this context
         g.access_token = validated_token
+        g.user_id = g.access_token.get("sub")
 
-        return function(*args, **kwargs)
+        # Check if the user is protected
+        if validated_token.get("sub"):
+            return f(*args, **kwargs)
+        else:
+            return json_abort(403, {"message": "Permission denied"})
 
-    return decorator
+    return decorated
+
+
+def admin_guard(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = get_bearer_token_from_request()
+        validated_token = auth0_service.validate_jwt(token)
+
+        # Checks to make sure validated_token is dict
+        if not isinstance(validated_token, dict):
+            return json_abort(403, {"message": "Permission denied"})
+
+        # Set globals for this context
+        g.access_token = validated_token
+        g.user_id = g.access_token.get("sub")
+
+        # Check if the user is an admin or protected
+        if validated_token.get("sub") and auth0_service.has_admin_role(validated_token):
+            return f(*args, **kwargs)
+        else:
+            return json_abort(403, {"message": "Permission denied"})
+
+    return decorated
 
 
 def permissions_guard(required_permissions=None):
