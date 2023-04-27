@@ -34,10 +34,10 @@ INSERT INTO `lottopool`.`pools` VALUES (
 
 INSERT INTO `lottopool`.`tickets` VALUES (
     UUID(), @pool1_uuid, @user_id,
-    NULL, 1, 0
+    NULL, "LOT40:WPD01XNMNJNS042023396922", 1, 0
 ), (
     UUID(), @pool2_uuid, @user_id,
-    NULL, 1, 0
+    NULL, "LOT40:WPD01XNMNJNS042023396923", 1, 0
 );
 
 INSERT INTO `lottopool`.`balances` VALUES (

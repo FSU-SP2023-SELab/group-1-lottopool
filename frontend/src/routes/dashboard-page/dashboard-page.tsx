@@ -52,12 +52,12 @@ const DashboardPage: Component = () => {
         <div class="flex justify-center items-center gap-4 w-full mb-8">
           <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Balance:</h2>
-            <p class="text-2xl font-bold">${dashboard()?.balance.toFixed(2) || "--"}</p>
+            <p class="text-2xl font-bold">${dashboard()?.balance.toFixed(2) ?? "--"}</p>
           </div>
 
           <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Tickets:</h2>
-            <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length || "--"}</p>
+            <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length ?? "--"}</p>
           </div>
         </div>
 

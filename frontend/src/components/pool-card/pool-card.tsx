@@ -1,6 +1,7 @@
 import { Component, Show, createSignal } from "solid-js";
 import powerballLogo from "../../assets/powerball_logo.jpg";
 import { iUserPool } from "../../routes/dashboard-page/types";
+import CheckoutButton from "../checkout-button";
 
 const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) => {
   const enteredPool = props.pool.my_tickets.length > 0;
@@ -54,6 +55,7 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
           {props.pool.tix_count} {props.pool.tix_count == 1 ? "Ticket" : "Tickets"} Bought
         </p>
       </div>
+      <CheckoutButton />
       {enteredPool ? (
         <button class="w-full text-center border-primary border-2 text-primary h-12 rounded font-semibold text-lg hover:bg-hover hover:text-white hover:border-hover">
           Buy More Tickets for ${props.pool.ppt}

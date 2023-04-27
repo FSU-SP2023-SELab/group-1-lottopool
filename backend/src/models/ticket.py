@@ -30,15 +30,17 @@ class Ticket:
         pool_id: str = None,
         user_id: str = None,
         picture_url: str = None,
+        numbers: str = None,
         acquired: int = 0,
-        paid_out: int = 0,
+        paid_for: int = 0,
     ):
         self.id = id if id else str(uuid.uuid4())
         self.pool_id = pool_id
         self.user_id = user_id
         self.picture_url = picture_url
+        self.numbers = numbers
         self.acquired = acquired
-        self.paid_out = paid_out
+        self.paid_for = paid_for
 
     def __repr__(self) -> str:
         return f'Ticket(id="{self.id}")'
@@ -53,9 +55,11 @@ class Ticket:
         cur = g.db.cursor()
         cur.execute(
             """
-            REPLACE INTO tickets (id, pool_id, user_id, picture_url, acquired, paid_out)
+            REPLACE INTO tickets (id, pool_id, user_id, picture_url, 
+                numbers, acquired, paid_for)
             VALUES (
-                %(id)s, %(pool_id)s, %(user_id)s, %(picture_url)s, %(acquired)s, %(paid_out)s
+                %(id)s, %(pool_id)s, %(user_id)s, %(picture_url)s, 
+                %(numbers)s, %(acquired)s, %(paid_for)s
             )
             """,
             self.__dict__,
