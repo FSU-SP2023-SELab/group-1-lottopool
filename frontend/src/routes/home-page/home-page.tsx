@@ -1,4 +1,4 @@
-import { Component, Show, createEffect, createResource } from "solid-js";
+import { Component, Show, createResource } from "solid-js";
 import mainArt from "../../assets/main_art.svg";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Link } from "@solidjs/router";

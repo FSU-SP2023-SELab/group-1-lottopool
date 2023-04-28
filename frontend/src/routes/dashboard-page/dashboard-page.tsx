@@ -39,10 +39,6 @@ const DashboardPage: Component = () => {
   const [dashboard] = createResource(userToken, fetchDashboard);
   const [currentPools] = createResource(userToken, fetchPools);
 
-  createEffect(() => {
-    console.log(userToken());
-  }, [userToken]);
-
   return (
     <div class="max-w-3xl mx-auto py-3 px-4">
       <Show

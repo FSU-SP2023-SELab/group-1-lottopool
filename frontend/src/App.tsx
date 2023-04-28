@@ -5,7 +5,8 @@ import Navbar from "./components/navbar";
 import ProfilePage from "./routes/profile-page";
 import DashboardPage from "./routes/dashboard-page";
 import AboutUsPage from "./routes/about-us-page";
-import HowPage from "./routes/how-page/how-page";
+import HowPage from "./routes/how-page/";
+import AdminPage from "./routes/admin-page";
 
 const App: Component = () => {
   return (
@@ -17,6 +18,7 @@ const App: Component = () => {
         <Route path={"/about"} component={AboutUsPage} />
         <Route path={"/how"} component={HowPage} />
         <Route path={"/profile"} component={ProfilePage} />
+        <Route path={"/admin"} component={AdminPage} />
       </Routes>
     </div>
   );

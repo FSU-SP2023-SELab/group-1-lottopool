@@ -1,13 +1,14 @@
-import { Component, Show, createEffect, createSignal } from "solid-js";
-import LoginButton from "../login-button";
-import CheckoutButton from "../checkout-button";
+import { Component, Show, createEffect, createResource, createSignal } from "solid-js";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Link } from "@solidjs/router";
 import { User } from "../../types";
 import logo from "../../assets/lottopool_logo.svg";
+import { isAdminFromToken } from "../../helpers";
 
 const Navbar: Component = () => {
   const auth = useAuth0();
+  const [userToken] = createResource(() => auth && auth.getToken());
+  const [isAdmin, setIsAdmin] = createSignal(false);
   const [openNav, setOpenNav] = createSignal(false);
 
   createEffect(() => {
@@ -22,6 +23,14 @@ const Navbar: Component = () => {
       }
     });
   }, []);
+
+  createEffect(() => {
+    if (userToken()) {
+      console.log(userToken());
+      setIsAdmin(isAdminFromToken(userToken() as string));
+      console.log("Admin: " + isAdmin());
+    }
+  });
 
   return (
     <header class="flex justify-between items-center max-w-4xl mx-auto h-20 px-4">
@@ -98,6 +107,17 @@ const Navbar: Component = () => {
               >
                 Profile
               </Link>
+              <Show when={isAdmin()}>
+                <Link
+                  class="text-red-700 block px-4 py-2 text-sm hover:bg-slate-100"
+                  role="menuitem"
+                  tabindex="-1"
+                  id="menu-item-2"
+                  href="/admin"
+                >
+                  Admin
+                </Link>
+              </Show>
             </div>
           </Show>
           <div class="py-1" role="none">
@@ -105,7 +125,7 @@ const Navbar: Component = () => {
               class="text-gray-700 block px-4 py-2 text-sm hover:bg-slate-100"
               role="menuitem"
               tabindex="-1"
-              id="menu-item-2"
+              id="menu-item-3"
               href="/about"
             >
               About Us
@@ -114,7 +134,7 @@ const Navbar: Component = () => {
               class="text-gray-700 block px-4 py-2 text-sm hover:bg-slate-100"
               role="menuitem"
               tabindex="-1"
-              id="menu-item-3"
+              id="menu-item-4"
               href="/how"
             >
               How It Works
@@ -126,7 +146,7 @@ const Navbar: Component = () => {
               class="text-primary block px-4 py-2 text-sm w-full text-left hover:bg-slate-100"
               role="menuitem"
               tabindex="-1"
-              id="menu-item-4"
+              id="menu-item-5"
               onclick={() => {
                 if (!auth) return;
                 if (auth.isAuthenticated()) {

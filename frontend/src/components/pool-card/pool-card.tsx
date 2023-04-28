@@ -14,7 +14,6 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
     month: "long",
     day: "numeric",
   };
-  console.log(props.pool);
   return (
     <div class="bg-slate-100 rounded p-4 border-primary border-2 relative w-full">
       <a
@@ -51,12 +50,22 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
           </p>
         </div>
 
-        <p class="font-bold text-3xl">${props.pool.jackpot.toLocaleString("en-US")} Jackpot</p>
+        <p class="font-bold text-3xl my-4">${props.pool.jackpot.toLocaleString("en-US")} Jackpot</p>
         <p class="font-semibold text-md text-primary">
-          {props.pool.user_count} {props.pool.user_count == 1 ? "Person" : "People"} Entered
-        </p>
-        <p class="font-semibold text-md text-primary">
-          {props.pool.tix_count} {props.pool.tix_count == 1 ? "Ticket" : "Tickets"} Bought
+          {props.pool.user_count} {props.pool.user_count == 1 ? "Person" : "People"}{" "}
+          Entered&ensp;|&ensp;
+          {props.pool.tix_count} {props.pool.tix_count == 1 ? "Ticket" : "Tickets"} Total
+          <Show when={enteredPool}>
+            <p class="font-semibold text-black">
+              Entered with {props.pool.my_tickets.length}
+              {props.pool.my_tickets.length == 1 ? " Ticket" : " Tickets"}&ensp;|&ensp;Potential
+              Earnings: $
+              {(
+                (props.pool.jackpot / props.pool.tix_count) *
+                props.pool.my_tickets.length
+              ).toLocaleString("en-US")}
+            </p>
+          </Show>
         </p>
       </div>
       <CheckoutButton />
@@ -69,22 +78,6 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
           Buy Tickets for ${props.pool.ppt}
         </button>
       )}
-
-      <Show when={enteredPool}>
-        <div class="mt-8">
-          <p class="font-bold">
-            Entered with {props.pool.my_tickets.length}
-            {props.pool.my_tickets.length == 1 ? " Ticket" : " Tickets"}
-          </p>
-          <p class="font-bold">
-            Potential Earnings: $
-            {(
-              (props.pool.jackpot / props.pool.tix_count) *
-              props.pool.my_tickets.length
-            ).toLocaleString("en-US")}
-          </p>
-        </div>
-      </Show>
     </div>
   );
 };
