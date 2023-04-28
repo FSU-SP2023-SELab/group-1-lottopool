@@ -108,7 +108,7 @@ class Pool:
         entry = cur.fetchone()
         if not entry:
             return 0
-        return ["count"]
+        return entry["count"]
 
     def get_breakdown(self) -> "dict[str, int]":
         """
