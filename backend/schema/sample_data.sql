@@ -11,7 +11,9 @@
 SET @agency_uuid = CAST(UUID() as UUID);
 SET @pool1_uuid = CAST(UUID() as UUID);
 SET @pool2_uuid = CAST(UUID() as UUID);
-SET @user_id = CAST("github|10553730" as VARCHAR(100));
+SET @pool3_uuid = CAST(UUID() as UUID);
+SET @andy_id = CAST("github|10553730" as VARCHAR(100));
+SET @anth_id = CAST("auth0|63fa3d5127c94b8af375029c" as VARCHAR(100));
 
 /* Inserts */
 
@@ -25,21 +27,37 @@ INSERT INTO `lottopool`.`agency` VALUES (
 INSERT INTO `lottopool`.`pools` VALUES (
     @pool1_uuid, "Powerball for Dec. 31st", @agency_uuid,
     "2023-01-01 00:00:00", "2023-12-31 23:59:59",
-    1000000.0, 3.0, 0
+    51000000.0, 2.0, 0
 ), (
-    @pool2_uuid, "Powerball for Dec. 31st", @agency_uuid,
+    @pool2_uuid, "Mega Millions for Dec. 31st", @agency_uuid,
     "2023-01-01 00:00:00", "2023-12-31 23:59:59", 
-    250000.0, 3.0, 1
+    38000000.0, 2.0, 0
+), (
+    @pool3_uuid, "Florida Lotto for Dec. 31st", @agency_uuid,
+    "2023-01-01 00:00:00", "2023-12-31 23:59:59", 
+    31000000.0, 2.0, 0
+), (
+    UUID(), "Cash4Life for Dec. 31st", @agency_uuid,
+    "2023-01-01 00:00:00", "2023-12-31 23:59:59", 
+    1000.0, 2.0, 0
 );
 
 INSERT INTO `lottopool`.`tickets` VALUES (
-    UUID(), @pool1_uuid, @user_id,
-    NULL, "LOT40:WPD01XNMNJNS042023396922", 1, 0
+    UUID(), @pool1_uuid, @andy_id,
+    NULL, "LOT40:WPD01XNMNJNS042023396922", 0, 1
 ), (
-    UUID(), @pool2_uuid, @user_id,
-    NULL, "LOT40:WPD01XNMNJNS042023396923", 1, 0
+    UUID(), @pool1_uuid, @anth_id,
+    NULL, "LOT40:WPD01XNMNJNS042023396923", 0, 1
+),(
+    UUID(), @pool2_uuid, @andy_id,
+    NULL, "LOT40:WPD01XNMNJNS042023396924", 0, 1
+),(
+    UUID(), @pool3_uuid, @anth_id,
+    NULL, "LOT40:WPD01XNMNJNS042023396925", 0, 1
 );
 
 INSERT INTO `lottopool`.`balances` VALUES (
-    @user_id, 250000.0
+    @andy_id, 100.0
+), (
+    @anth_id, 100.0
 );
