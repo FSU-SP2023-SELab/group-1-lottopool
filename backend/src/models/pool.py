@@ -84,7 +84,7 @@ class Pool:
     def set_agency(self, agency: Agency):
         self.agency_id = agency.id
 
-    def get_ticket_count(self, unique: bool = False) -> int:
+    def get_ticket_count(self, unique: bool = False):
         """
         :param bool unique: Return count of unique individuals or total tickets
 
@@ -94,16 +94,21 @@ class Pool:
 
         # Execute query
         cur = g.db.cursor(dictionary=True)
-        q = "SELECT COUNT(*) AS count FROM tickets WHERE pool_id=%s"
         if unique:
-            q += " GROUP BY user_id"
-        cur.execute(q, (self.id,))
+            cur.execute(
+                "SELECT COUNT(DISTINCT user_id) AS count FROM tickets WHERE pool_id=%s",
+                (self.id,),
+            )
+        else:
+            cur.execute(
+                "SELECT COUNT(id) AS count FROM tickets WHERE pool_id=%s", (self.id,)
+            )
 
-        # Get value and return
-        cnt = cur.fetchone()["count"]
-        if not cnt:
+        # Return data
+        entry = cur.fetchone()
+        if not entry:
             return 0
-        return cnt
+        return ["count"]
 
     def get_breakdown(self) -> "dict[str, int]":
         """
