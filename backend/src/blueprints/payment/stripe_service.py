@@ -49,7 +49,12 @@ def stripe_webhook():
 
         return "Success", 200
 
-    # TODO: Add handling for session failures to delete bad tickets
+    elif event["type"] == "checkout.session.expired":
+        # TODO: Add handling for session failures to delete bad tickets
+        ticket_id = event["data"]["object"]["client_reference_id"]
+        deletedTicket = Ticket.find_by_uuid(ticket_id)
+        # maybe deletedticket.delete()?
+        return "Checkout expired", 400
 
     # If we hit this block, it's an event we're not sure how to handle.
     # Log it, but do nothing.
