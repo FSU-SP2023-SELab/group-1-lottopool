@@ -1,5 +1,8 @@
 import { Component, Show, createSignal } from "solid-js";
-import powerballLogo from "../../assets/powerball_logo.jpg";
+import powerballLogo from "../../assets/powerball_logo.png";
+import cash4LifeLogo from "../../assets/cash4life_logo.png";
+import megaMillionLogo from "../../assets/mega_million_logo.png";
+import floridaLottoLogo from "../../assets/florida_lotto_logo.png";
 import { iUserPool } from "../../routes/dashboard-page/types";
 import CheckoutButton from "../checkout-button";
 
@@ -11,12 +14,12 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
     month: "long",
     day: "numeric",
   };
-
+  console.log(props.pool);
   return (
     <div class="bg-slate-100 rounded p-4 border-primary border-2 relative w-full">
       <a
         class="absolute top-4 right-4"
-        href="https://www.flalottery.com/powerball"
+        href={getPoolLink(props.pool.name)}
         target="_blank"
         rel="noreferrer"
       >
@@ -36,6 +39,7 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
         </svg>
       </a>
 
+      <PoolImage name={props.pool.name} />
       <p class="font-bold">{props.pool.name}</p>
       <div class="my-8 flex flex-col gap-2">
         <div>
@@ -46,7 +50,7 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
             Ending: {new Date(props.pool.end).toLocaleDateString("en-US", dateOptions)}
           </p>
         </div>
-        <img class="h-6 w-fit" src={powerballLogo} />
+
         <p class="font-bold text-3xl">${props.pool.jackpot.toLocaleString("en-US")} Jackpot</p>
         <p class="font-semibold text-md text-primary">
           {props.pool.user_count} {props.pool.user_count == 1 ? "Person" : "People"} Entered
@@ -83,6 +87,23 @@ const PoolCard: Component<{ pool: iUserPool }> = (props: { pool: iUserPool }) =>
       </Show>
     </div>
   );
+};
+
+const getPoolLink = (name: string) => {
+  if (name.toLowerCase().includes("powerball")) return "https://www.flalottery.com/powerball";
+  else if (name.toLowerCase().includes("cash4life")) return "https://www.flalottery.com/cash4Life";
+  else if (name.toLowerCase().includes("mega")) return "https://www.megamillions.com/";
+  return "https://www.flalottery.com/lotto";
+};
+
+const PoolImage: Component<{ name: string }> = ({ name }) => {
+  if (name.toLowerCase().includes("powerball"))
+    return <img class="h-6 w-fit" src={powerballLogo} />;
+  else if (name.toLowerCase().includes("cash4life"))
+    return <img class="h-8 w-fit" src={cash4LifeLogo} />;
+  else if (name.toLowerCase().includes("mega"))
+    return <img class="h-8 w-fit" src={megaMillionLogo} />;
+  return <img class="h-8 w-fit" src={floridaLottoLogo} />;
 };
 
 export default PoolCard;
