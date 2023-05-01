@@ -3,7 +3,6 @@ import { Component, Resource, Show, createResource } from "solid-js";
 import PoolCard from "../../components/pool-card";
 import { iCurrentPools, iDashboard } from "../../types";
 import { LoadingPool } from "../../components/loading-indicator";
-import { Link } from "@solidjs/router";
 
 const fetchDashboard = async (userToken: Resource<string | undefined>): Promise<iDashboard> => {
   try {
@@ -58,7 +57,7 @@ const DashboardPage: Component = () => {
             </Show>
           </div>
 
-          <Link href="/tickets" class="bg-primary text-white rounded flex flex-col flex-1 p-4">
+          <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Tickets:</h2>
             <Show
               when={!dashboard.loading}
@@ -66,7 +65,7 @@ const DashboardPage: Component = () => {
             >
               <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length ?? "--"}</p>
             </Show>
-          </Link>
+          </div>
         </div>
 
         <div class="flex flex-col items-center justify-center gap-4">

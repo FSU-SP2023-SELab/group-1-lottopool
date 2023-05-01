@@ -3,7 +3,7 @@ import powerballLogo from "../../assets/powerball_logo.png";
 import cash4LifeLogo from "../../assets/cash4life_logo.png";
 import megaMillionLogo from "../../assets/mega_million_logo.png";
 import floridaLottoLogo from "../../assets/florida_lotto_logo.png";
-import { iUserPool } from "../../routes/dashboard-page/types";
+import { iUserPool } from "../../types";
 import CheckoutButton from "../checkout-button";
 import { useAuth0 } from "@rturnq/solid-auth0";
 

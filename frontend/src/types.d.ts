@@ -12,7 +12,7 @@ export interface iUserTickets {
 export interface iTicket {
   acquired: number;
   id: string;
-  paid_out: number;
+  paid_for: number;
   picture_url: string;
   pool_id: string;
   user_id: string;
@@ -34,5 +34,23 @@ export interface iUserPool {
   start: Date;
   tix_count: number;
   user_count: number;
+  won: number;
+}
+
+export interface iLanding {
+  message: string;
+  pool: iLandingPool;
+  tix_count: number;
+  user_count: number;
+}
+
+export interface iLandingPool {
+  agency_id: string;
+  end: Date;
+  id: string;
+  jackpot: number;
+  name: string;
+  ppt: number;
+  start: Date;
   won: number;
 }
