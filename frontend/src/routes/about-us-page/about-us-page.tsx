@@ -17,7 +17,7 @@ const AboutUsPage: Component = () => {
       <ol>
         <li>
           <strong>Andrew Augustine (Project Manager/Backend Developer)</strong>
-          <p class="mb-5">
+          <p class="mb-4">
             A natural leader with a strong background in computer science, Andrew oversees the
             project and ensures seamless communication between team members. He is responsible for
             developing the backend infrastructure that powers Lottopool's robust features.
@@ -26,7 +26,7 @@ const AboutUsPage: Component = () => {
 
         <li>
           <strong>Anthony Ingle (Frontend Developer)</strong>
-          <p class="mb-5">
+          <p class="mb-4">
             With a keen eye for design and user experience, Anthony crafts the engaging and
             intuitive user interface that makes Lottopool a pleasure to use. He ensures that the
             platform is not only visually appealing but also highly functional, providing users with
@@ -36,7 +36,7 @@ const AboutUsPage: Component = () => {
 
         <li>
           <strong>Tristan Morris (Stripe Integration Specialist)</strong>
-          <p class="mb-5">
+          <p class="mb-4">
             Tristan specializes in payment processing and is responsible for integrating Stripe into
             Lottopool. He ensures that all transactions on the platform are secure and seamless,
             providing users with a hassle-free and enjoyable experience.
@@ -45,7 +45,7 @@ const AboutUsPage: Component = () => {
 
         <li>
           <strong>Cole Warren (Auth0 Integration Specialist)</strong>
-          <p class="mb-5">
+          <p class="mb-4">
             Cole is an expert in authentication and security, integrating Auth0 into Lottopool to
             ensure user data protection and privacy. His work allows users to trust that their
             information is safe and secure on our platform.
@@ -64,14 +64,14 @@ const AboutUsPage: Component = () => {
 
       <h2 class="text-3xl text-primary font-bold mb-8">Our Motivation:</h2>
 
-      <p class="mb-5">
+      <p class="mb-4">
         Lottopool was born from the belief that our unique idea has the potential to become
         something more than just a college project. We were inspired to create a platform that not
         only challenges our skills but also tests our ability to communicate effectively with one
         another.
       </p>
 
-      <p class="mb-5">
+      <p class="mb-4">
         After researching existing lottery pooling platforms, we found that while a few have had
         some success, they never managed to gain attention. We believe that Lottopool can change
         this by bringing a fresh and innovative approach to the lottery pooling space.
