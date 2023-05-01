@@ -1,10 +1,11 @@
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Show, createResource } from "solid-js";
 import powerballLogo from "../../assets/powerball_logo.png";
 import cash4LifeLogo from "../../assets/cash4life_logo.png";
 import megaMillionLogo from "../../assets/mega_million_logo.png";
 import floridaLottoLogo from "../../assets/florida_lotto_logo.png";
 import { iUserPool } from "../../routes/dashboard-page/types";
 import CheckoutButton from "../checkout-button";
+import { useAuth0 } from "@rturnq/solid-auth0";
 
 const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin = false }) => {
   const enteredPool = pool.my_tickets.length > 0;
@@ -14,8 +15,19 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
     month: "long",
     day: "numeric",
   };
+
+  const getStatus = () => {
+    if (pool.won) return <span class="text-green-700 font-bold">Won!</span>;
+    else if (new Date(pool.end) < new Date()) return <span class="text-red-500">Closed</span>;
+    return <span class="text-green-600">Open</span>;
+  };
+
   return (
-    <div class="bg-slate-100 rounded p-4 border-primary border-2 relative w-full">
+    <div
+      class={`${
+        pool.won ? "bg-primary-100" : "bg-slate-100"
+      } rounded p-4 border-primary border-2 relative w-full`}
+    >
       <a
         class="absolute top-4 right-4"
         href={getPoolLink(pool.name)}
@@ -51,6 +63,7 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
         </div>
 
         <p class="font-bold text-3xl my-4">${pool.jackpot.toLocaleString("en-US")} Jackpot</p>
+        <p class="font-semibold text-lg text-black">Status: {getStatus()}</p>
         <p class="font-semibold text-md text-primary">
           {pool.user_count} {pool.user_count == 1 ? "Person" : "People"} Entered&ensp;|&ensp;
           {pool.tix_count} {pool.tix_count == 1 ? "Ticket" : "Tickets"} Total
@@ -63,7 +76,7 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
           </Show>
         </p>
       </div>
-      <Show when={!admin} fallback={<AdminSection />}>
+      <Show when={!admin} fallback={<AdminSection pool={pool} />}>
         <CheckoutButton />
         {enteredPool ? (
           <button class="w-full text-center border-primary border-2 text-primary h-12 rounded font-semibold text-lg hover:bg-hover hover:text-white hover:border-hover">
@@ -79,8 +92,49 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
   );
 };
 
-const AdminSection: Component = () => {
-  return <div>Admin stuff</div>;
+const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
+  const auth = useAuth0();
+  const [userToken] = createResource(() => auth && auth.getToken());
+
+  const submitMarkPoolWon = async (e: Event) => {
+    e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body = {
+      pool_id: pool.id,
+      won: !pool.won,
+    };
+    console.log(JSON.stringify(body));
+    try {
+      const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/admin/mark_won`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      if (result.status == 200) return await result.json();
+      if (result.status == 401) return Promise.reject("You are not authorized");
+    } catch (e) {
+      return Promise.reject(e);
+    }
+    return Promise.reject("An error has occured");
+  };
+
+  return (
+    <div>
+      <button
+        class={`${
+          pool.won
+            ? "bg-white border-hover border-2 text-primary hover:text-white"
+            : "bg-primary text-white"
+        } rounded px-8 py-2 hover:bg-hover transition-colors`}
+        onclick={(e) => submitMarkPoolWon(e)}
+      >
+        {pool.won ? "Mark Pool as Not Won" : "Mark Pool as Won"}
+      </button>
+    </div>
+  );
 };
 
 const getPoolLink = (name: string) => {
