@@ -5,7 +5,7 @@ const ProfilePage: Component = () => {
   const auth = useAuth0();
 
   return (
-    <div class="max-w-3xl mx-auto flex flex-col items-center justify-between  py-8 px-4 gap-4">
+    <div class="max-w-3xl mx-auto flex flex-col items-center justify-between  py-8 px-4 gap-4 min-h-[calc(100vh-5rem-72px)]">
       <Show when={auth?.user()} fallback={<p class="text-lg">No User Logged In</p>}>
         <img class="rounded-full" src={auth?.user()["picture"]} />
         <h1 class="text-3xl font-bold mb-8">{auth?.user()["name"]}</h1>

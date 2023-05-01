@@ -40,7 +40,7 @@ const DashboardPage: Component = () => {
   const [currentPools] = createResource(userToken, fetchPools);
 
   return (
-    <div class="max-w-3xl mx-auto py-3 px-4">
+    <div class="max-w-3xl mx-auto py-3 px-4 min-h-[calc(100vh-5rem-72px)]">
       <Show
         when={auth?.user()}
         fallback={<p class="text-center text-lg text-primary">No User Logged In</p>}

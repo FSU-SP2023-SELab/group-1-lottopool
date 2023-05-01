@@ -20,7 +20,7 @@ const HomePage: Component = () => {
   const [landing] = createResource(fetchLanding);
 
   return (
-    <div class="max-w-3xl mx-auto flex flex-col items-center justify-between h-[calc(100vh-5rem)] py-8 px-4 gap-4">
+    <div class="max-w-3xl mx-auto flex flex-col items-center justify-between min-h-[calc(100vh-5rem-72px)] py-8 px-4 gap-4">
       <h1 class="text-4xl lg:text-5xl font-bold mb-8 text-center text-primary">
         Get higher chances of winning by pooling your tickets
       </h1>

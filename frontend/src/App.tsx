@@ -2,6 +2,7 @@ import { Component } from "solid-js";
 import { Routes, Route } from "@solidjs/router";
 import HomePage from "./routes/home-page";
 import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
 import ProfilePage from "./routes/profile-page";
 import DashboardPage from "./routes/dashboard-page";
 import AboutUsPage from "./routes/about-us-page";
@@ -20,6 +21,7 @@ const App: Component = () => {
         <Route path={"/profile"} component={ProfilePage} />
         <Route path={"/admin"} component={AdminPage} />
       </Routes>
+      <Footer />
     </div>
   );
 };
