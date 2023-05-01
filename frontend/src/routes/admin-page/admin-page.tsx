@@ -37,7 +37,7 @@ const AdminPage: Component = () => {
     };
     console.log(JSON.stringify(body));
     try {
-      const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}admin/add_pool`, {
+      const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/admin/add_pool`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${userToken()}`,
