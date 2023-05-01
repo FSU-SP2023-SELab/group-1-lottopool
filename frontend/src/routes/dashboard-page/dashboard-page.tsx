@@ -1,7 +1,8 @@
 import { useAuth0 } from "@rturnq/solid-auth0";
-import { Component, Resource, Show, createEffect, createResource } from "solid-js";
+import { Component, Resource, Show, createResource } from "solid-js";
 import PoolCard from "../../components/pool-card";
 import { iCurrentPools, iDashboard } from "./types";
+import { LoadingPool } from "../../components/loading-indicator";
 
 const fetchDashboard = async (userToken: Resource<string | undefined>): Promise<iDashboard> => {
   try {
@@ -48,16 +49,32 @@ const DashboardPage: Component = () => {
         <div class="flex justify-center items-center gap-4 w-full mb-8">
           <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Balance:</h2>
-            <p class="text-2xl font-bold">${dashboard()?.balance.toFixed(2) ?? "--"}</p>
+            <Show
+              when={!dashboard.loading}
+              fallback={<div class="h-4 bg-slate-200 rounded animate-pulse my-2" />}
+            >
+              <p class="text-2xl font-bold">${dashboard()?.balance.toFixed(2) ?? "--"}</p>
+            </Show>
           </div>
 
           <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Tickets:</h2>
-            <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length ?? "--"}</p>
+            <Show
+              when={!dashboard.loading}
+              fallback={<div class="h-4 bg-slate-200 rounded animate-pulse my-2" />}
+            >
+              <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length ?? "--"}</p>
+            </Show>
           </div>
         </div>
 
         <div class="flex flex-col items-center justify-center gap-4">
+          {currentPools.loading && (
+            <>
+              <LoadingPool />
+              <LoadingPool />
+            </>
+          )}
           {currentPools()?.pools?.map((p) => (
             <PoolCard pool={p} />
           ))}
@@ -67,4 +84,4 @@ const DashboardPage: Component = () => {
   );
 };
 
-export default DashboardPage;
+export { DashboardPage, fetchPools };
