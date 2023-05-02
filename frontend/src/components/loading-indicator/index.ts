@@ -1,2 +1,2 @@
-import { LoadingIndicator, LoadingPool } from "./loading-indicator";
-export { LoadingIndicator, LoadingPool };
+import { LoadingIndicator, LoadingPool, LoadingTicket } from "./loading-indicator";
+export { LoadingIndicator, LoadingPool, LoadingTicket };

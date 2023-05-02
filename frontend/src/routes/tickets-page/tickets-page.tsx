@@ -2,6 +2,7 @@ import { useAuth0 } from "@rturnq/solid-auth0";
 import { Component, Resource, Show, createResource } from "solid-js";
 import { iUserTickets } from "../../types";
 import TicketCard from "../../components/ticket-card";
+import { LoadingTicket } from "../../components/loading-indicator";
 
 const fetchTickets = async (userToken: Resource<string | undefined>): Promise<iUserTickets> => {
   try {
@@ -29,11 +30,18 @@ const TicketsPage: Component = () => {
         when={auth?.user()}
         fallback={<p class="text-center text-lg text-primary">No User Logged In</p>}
       >
-        <h1 class="text-4xl text-primary font-bold mb-8">My Tickets</h1>
+        <h1 class="text-4xl text-primary font-bold mb-4">My Tickets</h1>
         <div class="flex flex-col gap-2">
+          {tickets.loading && (
+            <>
+              <LoadingTicket />
+              <LoadingTicket />{" "}
+            </>
+          )}
           {tickets()?.tickets?.map((t) => (
             <TicketCard ticket={t} />
           ))}
+          {tickets()?.tickets?.length == 0 && "No Tickets Currently Held"}
         </div>
       </Show>
     </div>

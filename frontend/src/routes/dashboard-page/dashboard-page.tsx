@@ -86,6 +86,7 @@ const DashboardPage: Component = () => {
           {currentPools()?.pools?.map((p) => (
             <PoolCard pool={p} setBuyForPoolId={setBuyForPoolId} />
           ))}
+          {currentPools()?.pools?.length == 0 && "No Open Pools"}
         </div>
       </Show>
     </div>

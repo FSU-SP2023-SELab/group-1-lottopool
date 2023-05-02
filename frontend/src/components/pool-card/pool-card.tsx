@@ -4,7 +4,6 @@ import cash4LifeLogo from "../../assets/cash4life_logo.png";
 import megaMillionLogo from "../../assets/mega_million_logo.png";
 import floridaLottoLogo from "../../assets/florida_lotto_logo.png";
 import { iUserPool } from "../../types";
-import CheckoutButton from "../checkout-button";
 import { useAuth0 } from "@rturnq/solid-auth0";
 
 const PoolCard: Component<{
@@ -74,7 +73,6 @@ const PoolCard: Component<{
         </p>
       </div>
       <Show when={!admin} fallback={<AdminSection pool={pool} />}>
-        <CheckoutButton />
         {enteredPool ? (
           <button
             class="w-full text-center border-primary border-2 text-primary h-12 rounded font-semibold text-lg hover:bg-hover hover:text-white hover:border-hover"

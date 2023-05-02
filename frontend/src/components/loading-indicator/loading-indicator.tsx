@@ -42,4 +42,20 @@ const LoadingPool: Component = () => {
   );
 };
 
-export { LoadingIndicator, LoadingPool };
+const LoadingTicket: Component = () => {
+  return (
+    <div class="bg-slate-50 rounded p-4 border-slate-400 border-2 relative w-full">
+      <div role="status" class="animate-pulse">
+        <div class="h-6 bg-slate-300 rounded-full w-24 mb-2"></div>
+        <div class="h-3 bg-slate-400 rounded-full w-48 mb-4"></div>
+        <div class="h-2 bg-slate-300 rounded-full max-w-[200px] mb-2.5"></div>
+        <div class="h-2 bg-slate-300 rounded-full max-w-[220px] mb-2.5"></div>
+        <div class="h-2 bg-slate-300 rounded-full max-w-[240px] mb-2.5"></div>
+        <div class="h-2 bg-slate-300 rounded-full max-w-[360px] mb-2.5"></div>
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  );
+};
+
+export { LoadingIndicator, LoadingPool, LoadingTicket };

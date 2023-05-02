@@ -1,20 +1,20 @@
 export interface iDashboard {
   balance: number;
-  cur_tickets: iTicket[];
+  cur_tickets: iUserTicket[];
   message: string;
 }
 
 export interface iUserTickets {
   message: string;
-  tickets: iTicket[];
+  tickets: iUserTicket[];
 }
 
-export interface iTicket {
+export interface iUserTicket {
   acquired: number;
   id: string;
   paid_for: number;
   picture_url: string;
-  pool_id: string;
+  pool: iUserPool;
   user_id: string;
   numbers: string;
 }
@@ -29,7 +29,7 @@ export interface iUserPool {
   end: Date;
   id: string;
   jackpot: number;
-  my_tickets: iTicket[];
+  my_tickets: iUserTicket[];
   name: string;
   ppt: number;
   start: Date;
@@ -55,3 +55,14 @@ export interface iLandingPool {
   start: Date;
   won: number;
 }
+
+// Auth0 user object
+export type iUser = {
+  email: string;
+  email_verified: boolean;
+  name: string;
+  nickname: string;
+  picture: string; // url to picture
+  sub: string;
+  updated_at: Date;
+};

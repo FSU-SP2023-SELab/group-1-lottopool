@@ -1,4 +1,5 @@
 import { Component, Setter, createSignal } from "solid-js";
+import CheckoutButton from "../checkout-button";
 
 const NumberPickerModal: Component<{ poolId: string; setBuyForPoolId: Setter<string> }> = ({
   poolId,
@@ -126,12 +127,7 @@ const NumberPickerModal: Component<{ poolId: string; setBuyForPoolId: Setter<str
               </div>
             </div>
             <div class="bg-gray-50 px-2 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-              <button
-                type="button"
-                class="inline-flex w-full justify-center rounded bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-hover sm:ml-3 sm:w-auto"
-              >
-                Buy Ticket
-              </button>
+              <CheckoutButton numbers={numbers} poolId={poolId} />
               <button
                 type="button"
                 class="mt-3 inline-flex w-full justify-center rounded bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"

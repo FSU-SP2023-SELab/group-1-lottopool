@@ -1,7 +1,7 @@
 import { Component, Show, createEffect, createResource, createSignal } from "solid-js";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Link } from "@solidjs/router";
-import { User } from "../../types";
+import { iUser } from "../../types";
 import logo from "../../assets/lottopool_logo.svg";
 import { isAdminFromToken } from "../../helpers";
 
@@ -71,7 +71,7 @@ const Navbar: Component = () => {
             >
               <img
                 class="h-10 rounded-full border-primary border-2"
-                src={(auth?.user() as User)?.picture}
+                src={(auth?.user() as iUser)?.picture}
               />
             </Show>
           </button>
