@@ -1,3 +1,4 @@
+import { Link } from "@solidjs/router";
 import { Component } from "solid-js";
 
 const HowPage: Component = () => {
@@ -15,8 +16,12 @@ const HowPage: Component = () => {
           process powered by Auth0.
         </li>
         <li class="mt-4">
-          <strong>Choose a pool:</strong> Browse through our selection of lottery pools and pick the
-          one that best suits your preferences.
+          <strong>Choose a pool:</strong> Browse through our selection of lottery pools on the
+          <Link href="/dashboard" class="text-primary font-bold">
+            {" "}
+            Dashboard
+          </Link>{" "}
+          and pick the one that best suits your preferences.
         </li>
         <li class="mt-4">
           <strong>Purchase tickets:</strong> Buy as many tickets as you'd like within a single pool
