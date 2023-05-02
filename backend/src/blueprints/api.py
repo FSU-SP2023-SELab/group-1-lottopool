@@ -57,7 +57,7 @@ def get_current_pools():
         pool_data["tix_count"] = pool.get_ticket_count()
         pool_data["user_count"] = pool.get_ticket_count(unique=True)
         pool_data["my_tickets"] = [
-            t.to_dict() for t in Ticket.find_by_pool(pool, g.user_id)
+            t.to_dict() for t in Ticket.find_by_pool(pool, g.user_id, paid_for=True)
         ]
         pool_data_list.append(pool_data)
 
@@ -84,7 +84,7 @@ def get_user_dashboard():
     pools = Pool.get_current_pools()
     if pools:
         for pool in pools:
-            tickets += Ticket.find_by_pool(pool, g.user_id)
+            tickets += Ticket.find_by_pool(pool, g.user_id, paid_for=True)
 
     # Format Message
     m = Message("success")
@@ -156,7 +156,7 @@ def get_user_pools():
     for pool in pools:
         pool_data = pool.to_dict()
         pool_data["tickets"] = [
-            t.to_dict() for t in Ticket.find_by_pool(pool, g.user_id)
+            t.to_dict() for t in Ticket.find_by_pool(pool, g.user_id, paid_for=True)
         ]
         pool_data_list.append(pool_data)
 

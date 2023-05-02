@@ -96,12 +96,13 @@ class Pool:
         cur = g.db.cursor(dictionary=True)
         if unique:
             cur.execute(
-                "SELECT COUNT(DISTINCT user_id) AS count FROM tickets WHERE pool_id=%s",
+                "SELECT COUNT(DISTINCT user_id) AS count FROM tickets WHERE pool_id=%s AND paid_for=1",
                 (self.id,),
             )
         else:
             cur.execute(
-                "SELECT COUNT(id) AS count FROM tickets WHERE pool_id=%s", (self.id,)
+                "SELECT COUNT(id) AS count FROM tickets WHERE pool_id=%s AND paid_for=1",
+                (self.id,),
             )
 
         # Return data
@@ -117,7 +118,7 @@ class Pool:
 
         # Execure query
         cur = g.db.cursor(dictionary=True)
-        q = "SELECT user_id, COUNT(id) AS cnt FROM tickets WHERE pool_id=%s GROUP BY user_id"
+        q = "SELECT user_id, COUNT(id) AS cnt FROM tickets WHERE pool_id=%s AND paid_for=1 GROUP BY user_id"
         cur.execute(q, (self.id,))
 
         # Get value and return

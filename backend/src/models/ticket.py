@@ -71,6 +71,9 @@ class Ticket:
     def set_pool(self, pool: Pool):
         self.pool_id = pool.id
 
+    def set_paid_for(self, paid_for: bool):
+        self.paid_for = paid_for
+
     @classmethod
     def find_by_uuid(cls, id: str):
         """
@@ -104,7 +107,7 @@ class Ticket:
         return [Ticket(**d) for d in data]
 
     @classmethod
-    def find_by_pool(cls, pool: Pool, user_id: str = ""):
+    def find_by_pool(cls, pool: Pool, user_id: str = "", paid_for=False):
         """
         Searches the database for all tickets in pool
 
@@ -116,11 +119,14 @@ class Ticket:
 
         cur = g.db.cursor(dictionary=True)
         if user_id != "":
-            cur.execute(
-                "SELECT * FROM tickets WHERE pool_id=%s AND user_id = %s",
-                (pool.id, user_id),
-            )
+            q = "SELECT * FROM tickets WHERE pool_id=%s AND user_id = %s"
+            if paid_for:
+                q += " AND paid_for = 1"
+            cur.execute(q, (pool.id, user_id))
         else:
-            cur.execute("SELECT * FROM tickets WHERE pool_id=%s", (pool.id,))
+            q = "SELECT * FROM tickets WHERE pool_id=%s"
+            if paid_for:
+                q += " AND paid_for = 1"
+            cur.execute(q, (pool.id,))
         data = cur.fetchall()
         return [Ticket(**data) for data in data]
