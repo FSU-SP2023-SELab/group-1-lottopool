@@ -7,9 +7,9 @@ const CheckoutButton: Component = () => {
   const auth = useAuth0();
   const [userToken] = createResource(() => auth && auth.getToken());
   const [sessionUrl, setSessionUrl] = createSignal("");
-  //creating these varaibles as signals for now, not sure what the best way to set them is
-  const [ticketNums, setTicketNums] = createSignal("1234567");
-  const [poolId, setPoolId] = createSignal("7654321");
+  //creating these varaibles as signals for now, not sure the best way to set them is
+  const [ticketNums] = createSignal("1234567");
+  const [poolId] = createSignal("7654321");
   return (
     <button
       class="bg-black text-white rounded w-24 h-12"

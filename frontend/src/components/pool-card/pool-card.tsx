@@ -1,4 +1,4 @@
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Show } from "solid-js";
 import powerballLogo from "../../assets/powerball_logo.jpg";
 import { iUserPool } from "../../routes/dashboard-page/types";
 import CheckoutButton from "../checkout-button";

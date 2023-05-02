@@ -1,6 +1,4 @@
 import { Component, Show, createEffect, createSignal } from "solid-js";
-import LoginButton from "../login-button";
-import CheckoutButton from "../checkout-button";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Link } from "@solidjs/router";
 import { User } from "../../types";
