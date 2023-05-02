@@ -7,8 +7,11 @@ import { iTicket } from "../../types";
 
 const TicketCard: Component<{ ticket: iTicket }> = ({ ticket }) => {
   return (
-    <div class="rounded p-4 border-primary border-2 relative w-full">
-      <p>{ticket.id}</p>
+    <div class="rounded p-4 border-primary bg-slate-50 border-2 relative w-full">
+      <p>Id: {ticket.id}</p>
+      <p>Paid: {ticket.paid_for ? "Yes" : "No"}</p>
+      <p>Acquired: {ticket.acquired ? "Yes" : "No"}</p>
+      <p>Numbers: {ticket.numbers}</p>
     </div>
   );
 };

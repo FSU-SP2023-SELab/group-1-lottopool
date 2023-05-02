@@ -26,7 +26,7 @@ const LoadingIndicator: Component = () => {
 
 const LoadingPool: Component = () => {
   return (
-    <div class="bg-slate-100 rounded p-4 border-slate-400 border-2 relative w-full">
+    <div class="bg-slate-50 rounded p-4 border-slate-400 border-2 relative w-full">
       <div role="status" class="animate-pulse">
         <div class="h-6 bg-slate-300 rounded-full w-24 mb-2"></div>
         <div class="h-3 bg-slate-400 rounded-full w-48 mb-8"></div>

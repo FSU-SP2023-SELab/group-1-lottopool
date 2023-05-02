@@ -16,6 +16,7 @@ export interface iTicket {
   picture_url: string;
   pool_id: string;
   user_id: string;
+  numbers: string;
 }
 
 export interface iCurrentPools {

@@ -26,9 +26,7 @@ const HomePage: Component = () => {
       </h1>
       <img class="w-96" src={mainArt} />
       <p class="font-semibold text-slate-900 text-center w-48">
-        <span class="text-primary text-2xl font-bold ">
-          {landing()?.user_count ?? "A lot of people"}
-        </span>{" "}
+        <span class="text-primary text-2xl font-bold ">{landing()?.user_count ?? "?"}</span>{" "}
         {landing()?.user_count == 1 ? "person has" : "people have"} already entered the next pool!
       </p>
       <Show

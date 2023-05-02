@@ -1,4 +1,4 @@
-import { Component, Show, createResource } from "solid-js";
+import { Component, Setter, Show, createResource } from "solid-js";
 import powerballLogo from "../../assets/powerball_logo.png";
 import cash4LifeLogo from "../../assets/cash4life_logo.png";
 import megaMillionLogo from "../../assets/mega_million_logo.png";
@@ -7,7 +7,11 @@ import { iUserPool } from "../../types";
 import CheckoutButton from "../checkout-button";
 import { useAuth0 } from "@rturnq/solid-auth0";
 
-const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin = false }) => {
+const PoolCard: Component<{
+  pool: iUserPool;
+  setBuyForPoolId?: Setter<string>;
+  admin?: boolean;
+}> = ({ pool, setBuyForPoolId, admin = false }) => {
   const enteredPool = pool.my_tickets.length > 0;
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "short",
@@ -16,16 +20,10 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
     day: "numeric",
   };
 
-  const getStatus = () => {
-    if (pool.won) return <span class="text-green-700 font-bold">Won!</span>;
-    else if (new Date(pool.end) < new Date()) return <span class="text-red-500">Closed</span>;
-    return <span class="text-green-600">Open</span>;
-  };
-
   return (
     <div
       class={`${
-        pool.won ? "bg-primary-100" : "bg-slate-100"
+        pool.won ? "bg-primary-100" : "bg-slate-50"
       } rounded p-4 border-primary border-2 relative w-full`}
     >
       <a
@@ -63,7 +61,6 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
         </div>
 
         <p class="font-bold text-3xl my-4">${pool.jackpot.toLocaleString("en-US")} Jackpot</p>
-        <p class="font-semibold text-lg text-black">Status: {getStatus()}</p>
         <p class="font-semibold text-md text-primary">
           {pool.user_count} {pool.user_count == 1 ? "Person" : "People"} Entered&ensp;|&ensp;
           {pool.tix_count} {pool.tix_count == 1 ? "Ticket" : "Tickets"} Total
@@ -79,11 +76,17 @@ const PoolCard: Component<{ pool: iUserPool; admin?: boolean }> = ({ pool, admin
       <Show when={!admin} fallback={<AdminSection pool={pool} />}>
         <CheckoutButton />
         {enteredPool ? (
-          <button class="w-full text-center border-primary border-2 text-primary h-12 rounded font-semibold text-lg hover:bg-hover hover:text-white hover:border-hover">
+          <button
+            class="w-full text-center border-primary border-2 text-primary h-12 rounded font-semibold text-lg hover:bg-hover hover:text-white hover:border-hover"
+            onclick={() => setBuyForPoolId && setBuyForPoolId(pool.id)}
+          >
             Buy More Tickets for ${pool.ppt}
           </button>
         ) : (
-          <button class="w-full text-center bg-primary text-white h-12 rounded font-semibold text-lg hover:bg-hover">
+          <button
+            class="w-full text-center bg-primary text-white h-12 rounded font-semibold text-lg hover:bg-hover"
+            onclick={() => setBuyForPoolId && setBuyForPoolId(pool.id)}
+          >
             Buy Tickets for ${pool.ppt}
           </button>
         )}
@@ -96,14 +99,11 @@ const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
   const auth = useAuth0();
   const [userToken] = createResource(() => auth && auth.getToken());
 
-  const submitMarkPoolWon = async (e: Event) => {
-    e.preventDefault();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const submitMarkPoolWon = async () => {
     const body = {
       pool_id: pool.id,
       won: !pool.won,
     };
-    console.log(JSON.stringify(body));
     try {
       const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/admin/mark_won`, {
         method: "POST",
@@ -113,7 +113,29 @@ const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
         },
         body: JSON.stringify(body),
       });
-      if (result.status == 200) return await result.json();
+      if (result.status == 200) location.reload();
+      if (result.status == 401) return Promise.reject("You are not authorized");
+    } catch (e) {
+      return Promise.reject(e);
+    }
+    return Promise.reject("An error has occured");
+  };
+
+  const submitTixAcquired = async () => {
+    const body = {
+      pool_id: pool.id,
+    };
+    console.log(JSON.stringify(body));
+    try {
+      const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/admin/set_pool_acquired`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      if (result.status == 200) location.reload();
       if (result.status == 401) return Promise.reject("You are not authorized");
     } catch (e) {
       return Promise.reject(e);
@@ -122,16 +144,22 @@ const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
   };
 
   return (
-    <div>
+    <div class="flex gap-2 flex-wrap">
       <button
         class={`${
           pool.won
             ? "bg-white border-hover border-2 text-primary hover:text-white"
             : "bg-primary text-white"
         } rounded px-8 py-2 hover:bg-hover transition-colors`}
-        onclick={(e) => submitMarkPoolWon(e)}
+        onclick={() => submitMarkPoolWon()}
       >
         {pool.won ? "Mark Pool as Not Won" : "Mark Pool as Won"}
+      </button>
+      <button
+        class="bg-primary text-white rounded px-8 py-2 hover:bg-hover transition-colors"
+        onclick={() => submitTixAcquired()}
+      >
+        Set Tickets Acquired
       </button>
     </div>
   );

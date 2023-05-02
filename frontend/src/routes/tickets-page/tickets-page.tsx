@@ -30,9 +30,11 @@ const TicketsPage: Component = () => {
         fallback={<p class="text-center text-lg text-primary">No User Logged In</p>}
       >
         <h1 class="text-4xl text-primary font-bold mb-8">My Tickets</h1>
-        {tickets()?.tickets?.map((t) => (
-          <TicketCard ticket={t} />
-        ))}
+        <div class="flex flex-col gap-2">
+          {tickets()?.tickets?.map((t) => (
+            <TicketCard ticket={t} />
+          ))}
+        </div>
       </Show>
     </div>
   );
