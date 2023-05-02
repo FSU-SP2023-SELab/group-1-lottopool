@@ -123,9 +123,19 @@ def get_user_tickets():
     # Get all tickets
     tickets = Ticket.find_by_user(g.user_id)
 
+    # Get associated pool data
+    tix_data_list = []
+    for ticket in tickets:
+        ticket_data = ticket.to_dict()
+        pool = Pool.find_by_uuid(ticket.pool_id)
+        if pool:
+            del ticket_data["pool_id"]
+            ticket_data["pool"] = pool.to_dict()
+        tix_data_list.append(ticket_data)
+
     # Format Message
     m = Message("success")
-    m["tickets"] = [t.to_dict() for t in tickets]
+    m["tickets"] = tix_data_list
 
     # Return message
     return m.to_dict()
