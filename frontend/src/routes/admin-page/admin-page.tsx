@@ -33,6 +33,8 @@ const AdminPage: Component = () => {
       name: form.name,
       agency_id: form.agency_id,
       jackpot: parseInt(form.jackpot),
+      start: form.start ? new Date(form.start).toISOString().slice(0, 19).replace("T", " ") : null,
+      end: form.end ? new Date(form.end).toISOString().slice(0, 19).replace("T", " ") : null,
       ppt: parseInt(form.ppt),
     };
     try {
@@ -44,7 +46,7 @@ const AdminPage: Component = () => {
         },
         body: JSON.stringify(body),
       });
-      if (result.status == 200) return await result.json();
+      if (result.status == 200) return location.reload();
       if (result.status == 401) return Promise.reject("You are not authorized");
     } catch (e) {
       return Promise.reject(e);
