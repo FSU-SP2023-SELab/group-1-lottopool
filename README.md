@@ -1,4 +1,6 @@
-# Lottery Pooling
+<img src="/frontend/src/assets/lottopool_logo.svg" width="128"/>
+
+# Lottopool
 
 ## Project Description
 
