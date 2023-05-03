@@ -35,7 +35,6 @@ const AdminPage: Component = () => {
       jackpot: parseInt(form.jackpot),
       ppt: parseInt(form.ppt),
     };
-    console.log(JSON.stringify(body));
     try {
       const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/admin/add_pool`, {
         method: "POST",

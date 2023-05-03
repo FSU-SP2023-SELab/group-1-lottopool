@@ -13,7 +13,6 @@ const TicketCard: Component<{ ticket: iUserTicket }> = ({ ticket }) => {
       <p>Paid: {ticket.paid_for ? "Yes" : "No"}</p>
       <p>Price: ${ticket.pool.ppt}</p>
       <p>Acquired: {ticket.acquired ? "Yes" : "No"}</p>
-      <p>Numbers: {ticket.numbers}</p>
     </div>
   );
 };

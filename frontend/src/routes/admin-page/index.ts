@@ -1,2 +1,3 @@
 import AdminPage from "./admin-page";
-export default AdminPage;
+import AdminTicketsPage from "./admin-tickets-page";
+export { AdminPage, AdminTicketsPage };

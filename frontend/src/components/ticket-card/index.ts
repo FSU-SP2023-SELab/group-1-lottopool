@@ -1,2 +1,3 @@
 import TicketCard from "./ticket-card";
-export default TicketCard;
+import AdminTicketCard from "./admin-ticket-card";
+export { TicketCard, AdminTicketCard };

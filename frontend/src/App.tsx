@@ -7,7 +7,7 @@ import ProfilePage from "./routes/profile-page";
 import DashboardPage from "./routes/dashboard-page";
 import AboutUsPage from "./routes/about-us-page";
 import HowPage from "./routes/how-page/";
-import AdminPage from "./routes/admin-page";
+import { AdminPage, AdminTicketsPage } from "./routes/admin-page";
 import TicketsPage from "./routes/tickets-page";
 
 const App: Component = () => {
@@ -21,6 +21,7 @@ const App: Component = () => {
         <Route path={"/how"} component={HowPage} />
         <Route path={"/profile"} component={ProfilePage} />
         <Route path={"/admin"} component={AdminPage} />
+        <Route path={"/admin/tickets/:id"} component={AdminTicketsPage} />
         <Route path={"/tickets"} component={TicketsPage} />
       </Routes>
       <Footer />

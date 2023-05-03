@@ -5,6 +5,7 @@ import megaMillionLogo from "../../assets/mega_million_logo.png";
 import floridaLottoLogo from "../../assets/florida_lotto_logo.png";
 import { iUserPool } from "../../types";
 import { useAuth0 } from "@rturnq/solid-auth0";
+import { Link } from "@solidjs/router";
 
 const PoolCard: Component<{
   pool: iUserPool;
@@ -122,8 +123,8 @@ const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
   const submitTixAcquired = async () => {
     const body = {
       pool_id: pool.id,
+      picture_url: "",
     };
-    console.log(JSON.stringify(body));
     try {
       const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/admin/set_pool_acquired`, {
         method: "POST",
@@ -133,7 +134,7 @@ const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
         },
         body: JSON.stringify(body),
       });
-      if (result.status == 200) location.reload();
+      if (result.status == 200) return await result.json();
       if (result.status == 401) return Promise.reject("You are not authorized");
     } catch (e) {
       return Promise.reject(e);
@@ -142,23 +143,39 @@ const AdminSection: Component<{ pool: iUserPool }> = ({ pool }) => {
   };
 
   return (
-    <div class="flex gap-2 flex-wrap">
-      <button
-        class={`${
-          pool.won
-            ? "bg-white border-hover border-2 text-primary hover:text-white"
-            : "bg-primary text-white"
-        } rounded px-8 py-2 hover:bg-hover transition-colors`}
-        onclick={() => submitMarkPoolWon()}
-      >
-        {pool.won ? "Mark Pool as Not Won" : "Mark Pool as Won"}
-      </button>
-      <button
-        class="bg-primary text-white rounded px-8 py-2 hover:bg-hover transition-colors"
-        onclick={() => submitTixAcquired()}
-      >
-        Set Tickets Acquired
-      </button>
+    <div>
+      <p>
+        <span class="font-semibold">Id: </span>
+        {pool.id}
+      </p>
+      <p>
+        <span class="font-semibold">Agency Id: </span>
+        {pool.agency_id}
+      </p>
+      <div class="flex gap-2 flex-wrap mt-4">
+        <button
+          class={`${
+            pool.won
+              ? "bg-white border-hover border-2 text-primary hover:text-white"
+              : "bg-primary text-white"
+          } rounded px-8 py-2 hover:bg-hover transition-colors`}
+          onclick={() => submitMarkPoolWon()}
+        >
+          {pool.won ? "Mark Pool as Not Won" : "Mark Pool as Won"}
+        </button>
+        <button
+          class="bg-primary text-white rounded px-8 py-2 hover:bg-hover transition-colors"
+          onclick={() => submitTixAcquired()}
+        >
+          Set Tickets Acquired
+        </button>
+        <Link
+          class="bg-primary text-white rounded px-8 py-2 hover:bg-hover transition-colors"
+          href={`/admin/tickets/${pool.id}`}
+        >
+          View Tickets
+        </Link>
+      </div>
     </div>
   );
 };

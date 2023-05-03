@@ -1,8 +1,9 @@
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { Component, Resource, Show, createResource } from "solid-js";
 import { iUserTickets } from "../../types";
-import TicketCard from "../../components/ticket-card";
+import { TicketCard } from "../../components/ticket-card";
 import { LoadingTicket } from "../../components/loading-indicator";
+import { Link } from "@solidjs/router";
 
 const fetchTickets = async (userToken: Resource<string | undefined>): Promise<iUserTickets> => {
   try {
@@ -30,12 +31,29 @@ const TicketsPage: Component = () => {
         when={auth?.user()}
         fallback={<p class="text-center text-lg text-primary">No User Logged In</p>}
       >
-        <h1 class="text-4xl text-primary font-bold mb-4">My Tickets</h1>
+        <Link href="/dashboard" class="text-primary flex gap-2 font-semibold">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+            />
+          </svg>{" "}
+          Go Back
+        </Link>
+        <h1 class="text-4xl text-primary font-bold mt-4 mb-8">My Tickets</h1>
         <div class="flex flex-col gap-2">
           {tickets.loading && (
             <>
               <LoadingTicket />
-              <LoadingTicket />{" "}
+              <LoadingTicket />
             </>
           )}
           {tickets()?.tickets?.map((t) => (
