@@ -121,8 +121,8 @@ def create_checkout_session():
             "enabled": True,
         },
         mode="payment",
-        success_url=client_origin_url,
-        cancel_url=client_origin_url,
+        success_url=f"{client_origin_url}/dashboard",
+        cancel_url=f"{client_origin_url}/dashboard",
     )
 
     # Return redirect request to the frontend
