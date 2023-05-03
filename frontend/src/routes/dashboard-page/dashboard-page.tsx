@@ -1,7 +1,10 @@
 import { useAuth0 } from "@rturnq/solid-auth0";
-import { Component, Resource, Show, createEffect, createResource } from "solid-js";
+import { Component, Resource, Show, createResource, createSignal } from "solid-js";
 import PoolCard from "../../components/pool-card";
-import { iCurrentPools, iDashboard } from "./types";
+import { iCurrentPools, iDashboard } from "../../types";
+import { LoadingPool } from "../../components/loading-indicator";
+import { Link } from "@solidjs/router";
+import NumberPickerModal from "../../components/number-picker-modal";
 
 const fetchDashboard = async (userToken: Resource<string | undefined>): Promise<iDashboard> => {
   try {
@@ -38,37 +41,56 @@ const DashboardPage: Component = () => {
   const [userToken] = createResource(() => auth && auth.getToken());
   const [dashboard] = createResource(userToken, fetchDashboard);
   const [currentPools] = createResource(userToken, fetchPools);
-
-  createEffect(() => {
-    console.log(userToken());
-  }, [userToken]);
+  const [buyForPoolId, setBuyForPoolId] = createSignal<string>("");
 
   return (
-    <div class="max-w-3xl mx-auto py-3 px-4">
+    <div class="max-w-3xl mx-auto py-3 px-4 min-h-[calc(100vh-5rem-72px)]">
       <Show
         when={auth?.user()}
         fallback={<p class="text-center text-lg text-primary">No User Logged In</p>}
       >
+        <Show when={buyForPoolId() != ""}>
+          <NumberPickerModal poolId={buyForPoolId()} setBuyForPoolId={setBuyForPoolId} />
+        </Show>
         <div class="flex justify-center items-center gap-4 w-full mb-8">
           <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Balance:</h2>
-            <p class="text-2xl font-bold">${dashboard()?.balance.toFixed(2) ?? "--"}</p>
+            <Show
+              when={!dashboard.loading}
+              fallback={<div class="h-4 bg-slate-200 rounded animate-pulse my-2" />}
+            >
+              <p class="text-2xl font-bold">${dashboard()?.balance.toFixed(2) ?? "--"}</p>
+            </Show>
           </div>
 
-          <div class="bg-primary text-white rounded flex flex-col flex-1 p-4">
+          <Link href="/tickets" class="bg-primary text-white rounded flex flex-col flex-1 p-4">
             <h2 class="text-xl font-bold">Tickets:</h2>
-            <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length ?? "--"}</p>
-          </div>
+            <Show
+              when={!dashboard.loading}
+              fallback={<div class="h-4 bg-slate-200 rounded animate-pulse my-2" />}
+            >
+              <p class="text-2xl font-bold">{dashboard()?.cur_tickets.length ?? "--"}</p>
+            </Show>
+          </Link>
         </div>
 
+        <h2 class="text-3xl text-primary font-bold my-12 mb-4">Open Pools</h2>
         <div class="flex flex-col items-center justify-center gap-4">
+          {currentPools.loading && (
+            <>
+              <LoadingPool />
+              <LoadingPool />
+            </>
+          )}
+
           {currentPools()?.pools?.map((p) => (
-            <PoolCard pool={p} />
+            <PoolCard pool={p} setBuyForPoolId={setBuyForPoolId} />
           ))}
+          {currentPools()?.pools?.length == 0 && "No Open Pools"}
         </div>
       </Show>
     </div>
   );
 };
 
-export default DashboardPage;
+export { DashboardPage, fetchPools };
